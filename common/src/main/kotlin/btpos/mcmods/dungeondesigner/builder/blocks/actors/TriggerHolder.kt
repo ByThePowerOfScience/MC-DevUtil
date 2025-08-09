@@ -73,43 +73,6 @@ class BlockTriggerHolder(
 	
 	companion object{
 		const val id = "trigger_holder"
-		
-		// TODO: Replace dev textures with something we actually own
-		private const val TEXTURE_TOP_BOTTOM = "logic_programmer_top"
-		private const val TEXTURE_SIDES = "logic_programmer_side"
-		private const val TEXTURE_ON_TOP_BOTTOM = "logic_programmer_top_on"
-		private const val TEXTURE_ON_SIDES = "logic_programmer_side_on"
-//
-//		@Suppress("DuplicatedCode")
-//		override fun BlockStateProvider.buildModelsAndStates() {
-//			val off = blockLoc(TEXTURE_SIDES).let { side ->
-//				blockLoc(TEXTURE_TOP_BOTTOM).let { updown ->
-//					models().cube(id, updown, updown, side, side, side, side)
-//				}
-//			}
-//			val on = blockLoc(TEXTURE_ON_SIDES).let { side ->
-//				blockLoc(TEXTURE_ON_TOP_BOTTOM).let { updown ->
-//					models().cube("${id}_on", updown, updown, side, side, side, side)
-//				}
-//			}
-//
-//			variantDsl(ModBlocks.TRIGGER_BLOCK) {
-//				POWERED {
-//					false {
-//						model {
-//							modelFile(off)
-//						}
-//					}
-//					true {
-//						model {
-//							modelFile(on)
-//						}
-//					}
-//				}
-//			}
-//
-//			simpleBlockItem(ModBlocks.TRIGGER_BLOCK, off)
-//		}
 	}
 	
 	
