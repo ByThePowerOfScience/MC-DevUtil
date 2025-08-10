@@ -8,7 +8,7 @@ import btpos.mcmods.devutil.common.ext.vanilla.world.with
 import btpos.mcmods.devutil.common.macros.fastMapOf
 import btpos.mcmods.devutil.common.util.serialization.Serialization
 import btpos.mcmods.dungeondesigner.POWERED
-import btpos.mcmods.dungeondesigner.registry.ModBlocks
+import btpos.mcmods.dungeondesigner.registry.ModBlocks_Builder
 import com.google.common.collect.ImmutableMap
 import com.mojang.datafixers.util.Pair
 import com.mojang.serialization.Codec
@@ -78,7 +78,7 @@ typealias FlagName = String
  *      since it being here means we have to figure out a way to store that info separately,
  *      or if we should just stick to this being its own separate dynamic object type from the Template form
  */
-class DeserializedDungeonNbt private constructor(
+data class DeserializedDungeonNbt private constructor(
 	val dungeonBoundingBox: AABB,
 	val rooms: List<Room>,
 	val flagValues: Object2BooleanMap<FlagName>,
@@ -110,6 +110,18 @@ class DeserializedDungeonNbt private constructor(
 			}
 			
 			return DeserializedDungeonNbt(dungeonBBox, triggersByRoom, flagValues, flagBlocks.build())
+		}
+		
+		@JvmField
+		val CODEC = RecordCodecBuilder.create {
+			it.group(
+					Serialization.CODEC_AABB.fieldOf("dungeon_bounds").forGetter(DeserializedDungeonNbt::dungeonBoundingBox),
+					Room.CODEC.listOf().fieldOf("rooms").forGetter(DeserializedDungeonNbt::rooms),
+					Codec.unboundedMap(Codec.STRING, Codec.BOOL).fieldOf("flag_values").forGetter(DeserializedDungeonNbt::flagValues),
+					Codec.unboundedMap(Codec.STRING, BlockPos.CODEC.listOf()).fieldOf("flag_listeners").forGetter(DeserializedDungeonNbt::flagsToBlocks)
+			).apply(it) { bounds, rooms, flagValues, flagListeners ->
+				DeserializedDungeonNbt(bounds, rooms, Object2BooleanOpenHashMap(flagValues), flagListeners)
+			}
 		}
 	}
 	
@@ -167,14 +179,24 @@ class DeserializedDungeonNbt private constructor(
  * A wider bounding box holding a number of smaller triggers,
  *  used to limit the amount of triggers we check each player against per tick.
  */
-data class Room(val boundingBox: AABB, val containedTriggers: List<Trigger>)
+data class Room(val boundingBox: AABB, val containedTriggers: List<Trigger>) {
+	companion object {
+		@JvmField
+		val CODEC: Codec<Room> = RecordCodecBuilder.create {
+			it.group(
+					Serialization.CODEC_AABB.fieldOf("bounds").forGetter(Room::boundingBox),
+					Trigger.CODEC.listOf().fieldOf("triggers").forGetter(Room::containedTriggers)
+			).apply(it, ::Room)
+		}
+	}
+}
 
 data class Trigger(val boundingBox: AABB, val listeners: List<BlockPos>) {
 	fun powerListeners(level: ServerLevel) {
 		listeners.forEach { pos ->
 			val state = level.getBlockState(pos)
 			val newState = when (state.block) {
-				ModBlocks.TRIGGER_BLOCK -> state.with(POWERED, true)
+				ModBlocks_Builder.TRIGGER_BLOCK -> state.with(POWERED, true)
 				else -> return@forEach
 			}
 			if (newState != state)
@@ -186,11 +208,20 @@ data class Trigger(val boundingBox: AABB, val listeners: List<BlockPos>) {
 		listeners.forEach { pos ->
 			val state = level.getBlockState(pos)
 			val newState = when (state.block) {
-				ModBlocks.TRIGGER_BLOCK -> state.with(POWERED, false)
+				ModBlocks_Builder.TRIGGER_BLOCK -> state.with(POWERED, false)
 				else -> return@forEach
 			}
 			if (newState != state)
 				level.setBlockAndUpdate(pos, newState)
+		}
+	}
+	
+	companion object {
+		val CODEC: Codec<Trigger> = RecordCodecBuilder.create {
+			it.group(
+					Serialization.CODEC_AABB.fieldOf("bounds").forGetter(Trigger::boundingBox),
+					BlockPos.CODEC.listOf().fieldOf("listeners").forGetter(Trigger::listeners)
+			).apply(it, ::Trigger)
 		}
 	}
 }
