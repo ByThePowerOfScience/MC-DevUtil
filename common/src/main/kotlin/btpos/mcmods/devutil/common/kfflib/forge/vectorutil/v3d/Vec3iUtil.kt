@@ -5,7 +5,7 @@ import org.joml.Vector3f
 import net.minecraft.core.Vec3i
 import net.minecraft.world.phys.Vec3
 
-public operator fun Vec3i.plus(other: Vec3i): Vec3 = offset(other)
+public operator fun Vec3i.plus(other: Vec3i): Vec3i = offset(other)
 
 public operator fun Vec3i.unaryMinus(): Vec3i = this * -1
 

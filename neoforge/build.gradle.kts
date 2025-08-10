@@ -1,4 +1,5 @@
-import btpos.gradle.architectury.ArchAttributes
+import btpos.gradle.architectury.transformerplugin.CommonPlatformTransformersPlugin
+import btpos.gradle.architectury.transformerplugin.attributes.ModuleType
 
 plugins {
 	id("com.github.johnrengelman.shadow")
@@ -52,12 +53,9 @@ dependencies {
 		isTransitive = false
 	}
 	// run with the dev-transformed stuff
-	project(path=":common", configuration="transformMainForDev_NeoForge").let {
-		"developmentNeoForge"(it) { isTransitive = false }
-		runtimeOnly(it) { isTransitive = false }
+	project(path=":common", configuration=CommonPlatformTransformersPlugin.getConfigNameForSourceTypeAndPlatform(ModuleType.MAIN, "neoforge")).let {
 		"common"(it) { isTransitive = false }
 	}
-	
 	// shadow the prod stuff
 	"shadowBundle"(project(path= ":common", configuration= "transformProductionNeoForge"))
 }

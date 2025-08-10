@@ -1,7 +1,6 @@
 package btpos.mcmods.devutil.common.registry
 
 import btpos.mcmods.devutil.common.ext.kotlin.safeGetDelegate
-import btpos.mcmods.dungeondesigner.MODID
 import com.mojang.datafixers.types.Type
 import com.mojang.serialization.Codec
 import dev.architectury.registry.registries.DeferredRegister

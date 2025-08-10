@@ -1,18 +1,13 @@
-import btpos.gradle.architectury.ArchAttributes
-import btpos.gradle.preprocessor.getForgeTransformers
-import btpos.gradle.preprocessor.getFabricTransformers
-import dev.architectury.plugin.ArchitectPluginExtension
-import dev.architectury.plugin.TransformingTask
-import org.gradle.initialization.Environment
-import org.gradle.kotlin.dsl.withType
-import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
-import java.util.jar.JarOutputStream
-import java.util.jar.Manifest
+import btpos.gradle.architectury.transformerplugin.MultiplatformPreTransformer_Fabric
+import btpos.gradle.architectury.transformerplugin.MultiplatformPreTransformer_Forge
+import btpos.gradle.architectury.transformerplugin.attributes.ModuleType
+import btpos.gradle.architectury.transformerplugin.attributes.PlatformType
 
-fun File.createEmptyJar() {
-	parentFile.mkdirs()
-	JarOutputStream(outputStream(), Manifest()).close()
+plugins {
+	id("common-platform-transformer")
 }
+
+apply(plugin="common-platform-transformer")
 
 val testJar = tasks.register("testJar", Jar::class) {
 	group = "build"
@@ -32,74 +27,21 @@ architectury {
 	 * Since this is the only place we can actually learn what loaders are being targeted,
 	 * we have to do all of our transformer task initialization here...
 	 */
-	common((rootProject.properties["enabled_platforms"] as String).split(",")) {
-		val settings: ArchitectPluginExtension.CommonSettings = this
-		makeTransformingTasks(settings)
-	}
+	common(PlatformType.FABRIC, PlatformType.NEOFORGE)
 }
 
-
-
-fun makeTransformingTasks(settings: ArchitectPluginExtension.CommonSettings) {
-	for (loader in settings.loaders) {
-		// register our "transform for dev" task
-		val platform = loader.titledId
-		//
-		makeTransformingTask(platform, "transformMainForDev_$platform", tasks.jar.get(), "main")
-		makeTransformingTask(platform, "transformTestForDev_$platform", testJar.get(), "test")
-	}
+devTransformers {
+	platforms.putAll(mapOf(
+			objects.named<PlatformType>(PlatformType.FABRIC) to listOf(MultiplatformPreTransformer_Fabric()),
+			objects.named<PlatformType>(PlatformType.NEOFORGE) to listOf(MultiplatformPreTransformer_Forge())
+	))
+	
+	tasks.putAll(mapOf(
+			project.tasks.jar to objects.named<ModuleType>(ModuleType.MAIN),
+			testJar to objects.named<ModuleType>(ModuleType.TEST)
+	))
 }
 
-/**
- * Make tasks and configurations that apply ONLY our transformers to the given source set.
- */
-fun makeTransformingTask(platform: String, configName: String, jarTask: Jar, sourceSet: String) {
-	val id = platform.lowercase()
-	
-	project.configurations.maybeCreate(configName).apply {
-		isCanBeConsumed = true
-		isCanBeResolved = false
-		attributes { // TODO figure out what I need to do to make :fabric:compileClasspath take the devJar and not the runtimeElements jar
-			attribute(ArchAttributes.SOURCES_TYPE, sourceSet)
-			attribute(ArchAttributes.PLATFORM, id)
-		}
-	}
-	
-	// Registered with no transformers because we add ours to ALL transformtasks, including this one
-	val transformerTask = project.tasks.register<TransformingTask>("jar_$configName") {
-		dependsOn(jarTask)
-		
-		input = jarTask.archiveFile
-		
-		this.platform = id
-		
-		archiveClassifier = configName
-	}
-	
-	transformerTask.get().archiveFile.get().asFile.takeIf { !it.exists() }?.createEmptyJar() // fix a filenotfound crash
-	
-	project.artifacts.add(configName, transformerTask) // add exported variant for this config
-}
-
-// Add my transformers to the prod variants as well as our dev variants
-project.afterEvaluate {
-	tasks.withType<TransformingTask> {
-		val id = platform?.lowercase() ?: return@withType
-		val customTransformers = when (id) {
-			"neoforge" -> getForgeTransformers()
-			"fabric" -> getFabricTransformers()
-			else -> throw IllegalStateException("Platform \"$platform\" not specified! If it doesn't have transformers, it needs an empty list!")
-		}
-		
-		// update when the sources are changed and if the list of transformers in buildSrc changes
-		inputs.file(this.input)
-		inputs.property("transformers", customTransformers.joinToString(",") { it.javaClass.toString() })
-		
-		customTransformers.forEach {
-			add(it, { _, _ -> })
-		}
-	}
-}
 
 tasks.withType<Test> {
 	useJUnitPlatform()

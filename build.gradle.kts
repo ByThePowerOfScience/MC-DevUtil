@@ -1,23 +1,35 @@
 
-import btpos.gradle.architectury.ArchAttributes
-import btpos.gradle.architectury.loom
-import btpos.gradle.preprocessor.MultiplatformPreTransformer_Fabric
-import btpos.gradle.preprocessor.MultiplatformPreTransformer_Forge
-import dev.architectury.plugin.TransformingTask
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-	id("dev.architectury.loom") apply false
-	id("architectury-plugin")
+	id("dev.architectury.loom") version "1.10-SNAPSHOT" apply false
+	id("architectury-plugin") version "3.4-SNAPSHOT"
 	id("com.github.johnrengelman.shadow") version "8.1.1" apply false
-//	id("dungeondesigner-preprocessor") apply false
+	id("common-platform-transformer") apply false
 	kotlin("jvm") version "2.1.21"
 }
+
+val Project.loom: net.fabricmc.loom.api.LoomGradleExtensionAPI
+	get() = this.extensions.getByType()
 
 fun Project.prop(name: String): String {
 	return this.properties[name] as String
 }
+
+configurations {
+	create("common-main-deobf") {
+		attributes {
+//			attribute()
+		}
+	}
+}
+
+//artifacts {
+//	add("common-main-dev", tasks.getByPath(":common:jar"))
+//	add("common-main-prod", tasks.getByPath(":common:build"))
+//	add("neoforge-main-deobf", tasks.getByPath(":neoforge:jar"))
+//}
 
 architectury {
 	minecraft = project.prop("minecraft_version")
@@ -102,10 +114,10 @@ subprojects {
 		val transformedCommonTest by configurations.creating {
 			isCanBeConsumed = false
 			isCanBeResolved = true
-			attributes {
-				attribute(ArchAttributes.SOURCES_TYPE, "test")
-				attribute(ArchAttributes.PLATFORM, project.name)
-			}
+//			attributes {
+//				attribute(ArchAttributes.SOURCES_TYPE, "test")
+//				attribute(ArchAttributes.PLATFORM, project.name)
+//			}
 		}
 		
 		dependencies {

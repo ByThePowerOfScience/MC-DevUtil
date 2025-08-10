@@ -1,7 +1,5 @@
-import btpos.gradle.architectury.ArchAttributes
-import btpos.gradle.preprocessor.MultiplatformPreTransformer_Fabric
-import btpos.gradle.preprocessor.getFabricTransformers
-import dev.architectury.transformer.Transform
+import btpos.gradle.architectury.transformerplugin.CommonPlatformTransformersPlugin
+import btpos.gradle.architectury.transformerplugin.attributes.ModuleType
 
 plugins {
 	id("com.github.johnrengelman.shadow")
@@ -19,10 +17,10 @@ configurations {
 		isCanBeConsumed = false
 		
 		// this part is the only custom bit
-		attributes {
-			attribute(ArchAttributes.SOURCES_TYPE, "main")
-			attribute(ArchAttributes.PLATFORM, "fabric")
-		}
+//		attributes {
+//			attribute(ArchAttributes.SOURCES_TYPE, "main")
+//			attribute(ArchAttributes.PLATFORM, "fabric")
+//		}
 	}
 	
 	
@@ -54,9 +52,7 @@ dependencies {
 		isTransitive = false
 	}
 	// run with the dev-transformed stuff
-	project(path=":common", configuration="transformMainForDev_Fabric").let {
-		"developmentFabric"(it) { isTransitive = false }
-		runtimeOnly(it) { isTransitive = false }
+	project(path=":common", configuration=CommonPlatformTransformersPlugin.getConfigNameForSourceTypeAndPlatform(ModuleType.MAIN, "fabric")).let {
 		"common"(it) { isTransitive = false }
 	}
 	

@@ -2,9 +2,9 @@
 
 package btpos.mcmods.devutil.common.macros.brigadier
 
-import btpos.dsl.brigadier.ArgBuilder
-import btpos.dsl.brigadier.Command
-import btpos.dsl.brigadier.LiteralBuilder
+import btpos.mcmods.devutil.common.dsl.brigadier.ArgBuilder
+import btpos.mcmods.devutil.common.dsl.brigadier.Command
+import btpos.mcmods.devutil.common.dsl.brigadier.LiteralBuilder
 import com.mojang.brigadier.arguments.ArgumentType
 import com.mojang.brigadier.builder.LiteralArgumentBuilder
 import com.mojang.brigadier.builder.RequiredArgumentBuilder
