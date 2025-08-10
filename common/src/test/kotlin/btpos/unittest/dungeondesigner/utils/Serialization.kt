@@ -1,6 +1,6 @@
 package btpos.unittest.dungeondesigner.utils
 
-import btpos.mcmods.devutil.common.ext.vanilla.world.AABB
+import btpos.mcmods.devutil.common.ext.vanilla.world.aabbOf
 import btpos.mcmods.devutil.common.util.serialization.Serialization
 import btpos.mcmods.devutil.common.util.serialization.Serialization.decodeTag
 import btpos.mcmods.devutil.common.util.serialization.Serialization.encodeToTag
@@ -48,7 +48,7 @@ class CodecAABB {
 	fun block_totag() {
 		val v1 = BlockPos(0, 0, 0)
 		val v2 = BlockPos(1, 1, 1)
-		val bb = AABB(v1, v2)
+		val bb = aabbOf(v1, v2)
 		
 		val expected = CompoundTag().apply {
 			put("first", BlockPos.CODEC.encodeToTag(v1))
@@ -64,7 +64,7 @@ class CodecAABB {
 	fun block_fromtag() {
 		val v1 = BlockPos(0, 0, 0)
 		val v2 = BlockPos(1, 1, 1)
-		val expected = AABB(v1, v2)
+		val expected = aabbOf(v1, v2)
 		
 		val tag = CompoundTag().apply {
 			put("first", BlockPos.CODEC.encodeToTag(v1))

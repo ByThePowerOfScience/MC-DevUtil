@@ -26,7 +26,7 @@ object Serialization {
 		it.group(
 				BlockPos.CODEC.fieldOf("first").forGetter { aabb: AABB -> aabb.getMinCornerBlock() },
 				BlockPos.CODEC.fieldOf("second").forGetter { aabb: AABB -> aabb.getMaxCornerBlock() }
-		).apply(it, { pos1, pos2 -> btpos.mcmods.devutil.common.ext.vanilla.world.AABB(pos1, pos2) })
+		).apply(it, { pos1, pos2 -> btpos.mcmods.devutil.common.ext.vanilla.world.aabbOf(pos1, pos2) })
 	}
 	
 	fun <T> Codec<T>.decodeTag(tag: Tag): T {

@@ -3,7 +3,6 @@
 package btpos.mcmods.dungeondesigner.builder.blocks.actors
 
 import btpos.mcmods.devutil.common.ext.kotlin.isNullOrTrue
-import btpos.mcmods.devutil.common.ext.kotlin.safeGetDelegate
 import btpos.mcmods.devutil.common.ext.vanilla.asComponent
 import btpos.mcmods.devutil.common.ext.vanilla.data.nullSafeFieldOf
 import btpos.mcmods.devutil.common.ext.vanilla.destructuring.component1
@@ -13,11 +12,12 @@ import btpos.mcmods.devutil.common.ext.vanilla.sendSystemMessage
 import btpos.mcmods.devutil.common.ext.vanilla.stack
 import btpos.mcmods.devutil.common.ext.vanilla.world.BlockInclusiveAABB
 import btpos.mcmods.devutil.common.ext.vanilla.world.BlockInclusiveAABB.Companion.toBlockInclusive
+import btpos.mcmods.devutil.common.ext.vanilla.world.aabbOf
 import btpos.mcmods.devutil.common.ext.vanilla.world.blockEntity
 import btpos.mcmods.devutil.common.ext.vanilla.world.dropItemAboveBlock
 import btpos.mcmods.devutil.common.ext.vanilla.world.actOnServer
 import btpos.mcmods.devutil.common.ext.vanilla.world.with
-import btpos.mcmods.devutil.common.kfflib.forge.vectorutil.v3d.toVec3
+import btpos.mcmods.devutil.common.kfflib.forge.vectorutil.v3d.unaryMinus
 import btpos.mcmods.devutil.common.macros.ChatUtils.toComponent
 import btpos.mcmods.devutil.common.structure.composition.IOnChange
 import btpos.mcmods.devutil.common.structure.program.IReverseCloneable
@@ -26,7 +26,6 @@ import btpos.mcmods.devutil.common.util.serialization.Serialization
 import btpos.mcmods.devutil.common.util.serialization.putCodecSerializable
 import btpos.mcmods.devutil.common.util.serialization.readCodecSerializableToExisting
 import btpos.mcmods.devutil.parts.IItemRepresentable
-import btpos.mcmods.devutil.util.properties.LazyCache
 import btpos.mcmods.dungeondesigner.POWERED
 import btpos.mcmods.dungeondesigner.WorldUtils
 import btpos.mcmods.dungeondesigner.builder.items.ItemTriggerVariable
@@ -60,7 +59,6 @@ import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
 import net.minecraft.world.level.storage.loot.LootParams
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams
-import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.BlockHitResult
 import kotlin.jvm.optionals.getOrNull
 
@@ -167,7 +165,7 @@ class BlockTriggerHolder(
 			
 			val isPowered = state.getValue(POWERED)
 			
-			if (isPowered != WorldUtils.isPlayerInBoundingBox(ent.triggerBoundingBox!!, level)) {
+			if (isPowered != WorldUtils.isPlayerInBoundingBox(ent.triggerBoundingBox ?: return@BlockEntityTicker, level)) {
 				level.setBlockAndUpdate(pos, state.with(POWERED, !isPowered))
 			}
 		}
@@ -181,7 +179,7 @@ class TileTriggerHolder(p0: BlockPos, p1: BlockState) : BlockEntity(ModBlocks.TR
 		private const val TAGKEY_STATE = "trigger"
 	}
 	
-	private val state = TriggerHolderState(pOnChange = this::setChanged)
+	private val state = TriggerHolderState(pOnChange = this::setChanged, getCurrentPos = this::getBlockPos)
 	
 	var triggerCorners by state::corners
 	val triggerBoundingBox get() = state.aabb?.bb
@@ -221,7 +219,8 @@ class TileTriggerHolder(p0: BlockPos, p1: BlockState) : BlockEntity(ModBlocks.TR
 class TriggerHolderState(
 	pTrigger: Pair<BlockPos, BlockPos>? = null,
 	pItemName: String? = null,
-	pOnChange: () -> Unit = {}
+	pOnChange: () -> Unit = {},
+	getCurrentPos: () -> BlockPos = { BlockPos(0, 0, 0) }
 ) : IOnChange, ICodecSerializableMutable<TriggerHolderState> {
 	override var onChange = pOnChange
 		set(callback) {
@@ -236,7 +235,7 @@ class TriggerHolderState(
 	}
 	//endregion
 	
-	val triggerDelegate = TriggerVarItemConverter(pTrigger, pItemName, pOnChange)
+	val triggerDelegate = TriggerVarItemConverter(pTrigger, pItemName, pOnChange, getCurrentPos)
 	
 	var corners by triggerDelegate::value
 	val itemName by triggerDelegate::name
@@ -269,13 +268,23 @@ class TriggerHolderState(
 	}
 }
 
-class TriggerVarItemConverter(triggerIn: Pair<BlockPos, BlockPos>? = null, nameIn: String? = null, override var onChange: () -> Unit = {}) : IOnChange, IItemRepresentable<Pair<BlockPos, BlockPos>>, IReverseCloneable<TriggerVarItemConverter> {
+class TriggerVarItemConverter(
+	triggerIn: Pair<BlockPos, BlockPos>? = null,
+	nameIn: String? = null,
+	override var onChange: () -> Unit = {},
 	/**
-	 * A cache of the bounding box for the trigger we check every tick in [BlockTriggerHolder.getTicker].
+	 * Used to make [value] relative to our current location when set and retrieved.
+	 * We need a relative position so Axiom can move this.
+	 */
+	private var getCurrentPos: () -> BlockPos
+) : IOnChange, IItemRepresentable<Pair<BlockPos, BlockPos>>, IReverseCloneable<TriggerVarItemConverter> {
+	/**
+	 * The bounding box for the trigger we check every tick in [BlockTriggerHolder.getTicker].
 	 *
 	 * Derived from [value], and invalidated by [value]'s setter.
 	 */
-	val cachedInclusiveAABB: BlockInclusiveAABB? by LazyCache { value?.run { AABB(first.toVec3(), second.toVec3()).toBlockInclusive() } }
+	val cachedInclusiveAABB: BlockInclusiveAABB?
+		get() = value?.run { getCurrentPos().let { aabbOf(first.offset(it), second.offset(it)).toBlockInclusive() } }
 	
 	/**
 	 * Store the corners as BlockPos instead of the value as an AABB so we can return the item in the same way it was given,
@@ -283,9 +292,9 @@ class TriggerVarItemConverter(triggerIn: Pair<BlockPos, BlockPos>? = null, nameI
 	 */
 	override var value: Pair<BlockPos, BlockPos>? = triggerIn
 		set(v) {
+			val negateOffset = -getCurrentPos()
+			field = v?.run { Pair(first.offset(negateOffset), second.offset(negateOffset)) }
 			onChange()
-			::cachedInclusiveAABB.safeGetDelegate<LazyCache<*>>()?.invalidate()
-			field = v
 		}
 	
 	/**
@@ -299,6 +308,7 @@ class TriggerVarItemConverter(triggerIn: Pair<BlockPos, BlockPos>? = null, nameI
 	override fun setFromItem(stack: ItemStack): Boolean {
 		val tagData = ItemTriggerVariable.getData(stack)?.takeIf { it.isComplete() } ?: return false
 		value = Pair(tagData.first, tagData.second)
+		
 		getDisplayName(stack)?.let {
 			name = it
 		}

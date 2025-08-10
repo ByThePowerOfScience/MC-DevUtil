@@ -54,6 +54,6 @@ value class BlockInclusiveAABB private constructor(val bb: AABB) {
 	}
 }
 
-fun AABB(pos1: BlockPos, pos2: BlockPos): AABB {
+fun aabbOf(pos1: BlockPos, pos2: BlockPos): AABB {
 	return AABB(pos1.x.toDouble(), pos1.y.toDouble(), pos1.z.toDouble(), pos2.x.toDouble(), pos2.y.toDouble(), pos2.z.toDouble())
 }
