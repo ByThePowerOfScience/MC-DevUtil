@@ -49,7 +49,7 @@ class ItemRemoteLinker(props: Properties) : Item(props) {
 //            basicItem()
 //        }
         
-        const val id = "remote_linker"
+        const val id = "builder/remote_linker"
     }
     
     @JvmInline

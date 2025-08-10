@@ -40,7 +40,7 @@ import java.util.function.Consumer
  */
 class ItemEntityPipette(pProps: Properties) : Item(pProps) {
 	companion object {
-		const val id = "entity_pipette"
+		const val id = "builder/entity_pipette"
 //
 //		override fun ItemModelProvider.buildModels() {
 //			basicItem()

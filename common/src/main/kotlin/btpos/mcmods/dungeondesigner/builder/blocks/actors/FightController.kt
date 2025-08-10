@@ -14,18 +14,14 @@ import btpos.mcmods.dungeondesigner.MultiplatformHooks.getItemHandler
 import btpos.mcmods.dungeondesigner.builder.items.ItemEntityPipette
 import btpos.mcmods.dungeondesigner.builder.nbt.IEntitySpawnData
 import btpos.mcmods.dungeondesigner.builder.nbt.trySpawnEntity
-import btpos.mcmods.dungeondesigner.registry.ModBlocks
+import btpos.mcmods.dungeondesigner.registry.ModBlocks_Builder
 import btpos.mcmods.dungeondesigner.registry.ModItems
 import btpos.mcmods.dungeondesigner.MOD_LOGGER as DLOGGER
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.network.chat.Component
-import net.minecraft.network.syncher.EntityDataAccessor
-import net.minecraft.network.syncher.EntityDataSerializers
-import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.util.StringRepresentable
-import net.minecraft.world.entity.Entity
 import net.minecraft.world.item.context.BlockPlaceContext
 import net.minecraft.world.level.BlockGetter
 import net.minecraft.world.level.Level
@@ -59,7 +55,7 @@ enum class FightStatus : StringRepresentable {
 
 class BlockFightController(props: Properties) : Block(props), BlockWithEntity<TileFightController>, IPlatformConnectRedstone, Serializable {
 	companion object {
-		const val id = "fight_controller"
+		const val id = "builder/fight_controller"
 		
 		@JvmField
 		val STATUS = EnumProperty.create("status", FightStatus::class.java)
@@ -76,7 +72,7 @@ class BlockFightController(props: Properties) : Block(props), BlockWithEntity<Ti
 	}
 	
 	//region Setup
-	override fun getEntityType() = ModBlocks.FIGHT_CONTROLLER_ENTITY
+	override fun getEntityType() = ModBlocks_Builder.FIGHT_CONTROLLER_ENTITY
 	
 	override fun createBlockStateDefinition(pBuilder: StateDefinition.Builder<Block?, BlockState?>) {
 		super.createBlockStateDefinition(pBuilder)
@@ -161,7 +157,7 @@ class BlockFightController(props: Properties) : Block(props), BlockWithEntity<Ti
  * @see btpos.mcmods.dungeondesigner.mixin.MArenaDespawnOnUnload
  */
 class TileFightController(pPos: BlockPos, pState: BlockState)
-	: BlockEntity(ModBlocks.FIGHT_CONTROLLER_ENTITY, pPos, pState)
+	: BlockEntity(ModBlocks_Builder.FIGHT_CONTROLLER_ENTITY, pPos, pState)
 {
 	// Reset the fight status on load, which is the equivalent of resetting it when the chunk is unloaded
 	fun resetFightStateOnLoad() {

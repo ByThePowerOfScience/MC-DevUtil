@@ -31,7 +31,7 @@ import btpos.mcmods.dungeondesigner.WorldUtils
 import btpos.mcmods.dungeondesigner.builder.items.ItemTriggerVariable
 import btpos.mcmods.dungeondesigner.common.nbtadapters.getDisplayName
 import btpos.mcmods.dungeondesigner.common.nbtadapters.setDisplayName
-import btpos.mcmods.dungeondesigner.registry.ModBlocks
+import btpos.mcmods.dungeondesigner.registry.ModBlocks_Builder
 import btpos.mcmods.dungeondesigner.registry.ModItems
 import com.mojang.datafixers.util.Pair
 import com.mojang.serialization.Codec
@@ -70,7 +70,7 @@ class BlockTriggerHolder(
 	}
 	
 	companion object {
-		const val id = "trigger_holder"
+		const val id = "builder/trigger_holder"
 	}
 	
 	
@@ -92,7 +92,7 @@ class BlockTriggerHolder(
 		pBuilder.add(POWERED)
 	}
 	
-	override fun newBlockEntity(pos: BlockPos, state: BlockState): BlockEntity? = ModBlocks.TRIGGER_BLOCK_ENTITY.create(pos, state)
+	override fun newBlockEntity(pos: BlockPos, state: BlockState): BlockEntity? = ModBlocks_Builder.TRIGGER_BLOCK_ENTITY.create(pos, state)
 	//endregion
 	
 	
@@ -109,7 +109,7 @@ class BlockTriggerHolder(
 		pHand: InteractionHand, pHit: BlockHitResult
 	): InteractionResult {
 		
-		val ourEnt = pLevel.blockEntity(pPos, ModBlocks.TRIGGER_BLOCK_ENTITY) ?: return InteractionResult.PASS
+		val ourEnt = pLevel.blockEntity(pPos, ModBlocks_Builder.TRIGGER_BLOCK_ENTITY) ?: return InteractionResult.PASS
 		
 		// Pop out trigger item into world if it exists
 		if (pPlayer.isShiftKeyDown) {
@@ -174,7 +174,7 @@ class BlockTriggerHolder(
 	private fun shouldStopCheckingTrigger(level: Level, pos: BlockPos): Boolean = level.hasSignal(pos.above(), Direction.UP)
 }
 
-class TileTriggerHolder(p0: BlockPos, p1: BlockState) : BlockEntity(ModBlocks.TRIGGER_BLOCK_ENTITY, p0, p1) {
+class TileTriggerHolder(p0: BlockPos, p1: BlockState) : BlockEntity(ModBlocks_Builder.TRIGGER_BLOCK_ENTITY, p0, p1) {
 	companion object {
 		private const val TAGKEY_STATE = "trigger"
 	}

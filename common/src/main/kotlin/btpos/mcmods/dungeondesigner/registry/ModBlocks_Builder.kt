@@ -24,7 +24,7 @@ import net.minecraft.world.level.material.MapColor
 import net.minecraft.world.level.material.PushReaction
 
 
-object ModBlocks : IBlockRegistry {
+object ModBlocks_Builder : IBlockRegistry {
 	override val BLOCKS = createRegistry(Registries.BLOCK)
 	override val ITEMS = createRegistry(Registries.ITEM)
 	override val ENTITIES = createRegistry(Registries.BLOCK_ENTITY_TYPE)

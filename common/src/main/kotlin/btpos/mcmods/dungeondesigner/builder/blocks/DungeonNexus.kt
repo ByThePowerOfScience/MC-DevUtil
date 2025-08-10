@@ -1,6 +1,6 @@
 package btpos.mcmods.dungeondesigner.builder.blocks
 
-import btpos.mcmods.dungeondesigner.registry.ModBlocks
+import btpos.mcmods.dungeondesigner.registry.ModBlocks_Builder
 import net.minecraft.core.BlockPos
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.EntityBlock
@@ -9,18 +9,18 @@ import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.storage.ValueOutput
 
 class BlockDungeonNexus(props: Properties) : Block(props), EntityBlock {
-	override fun newBlockEntity(p0: BlockPos, p1: BlockState): BlockEntity? = ModBlocks.DUNGEON_NEXUS_ENTITY.create(p0, p1)
+	override fun newBlockEntity(p0: BlockPos, p1: BlockState): BlockEntity? = ModBlocks_Builder.DUNGEON_NEXUS_ENTITY.create(p0, p1)
 	
 	companion object {
-		const val id = "dungeon_nexus"
+		const val id = "builder/dungeon_nexus"
 		
 //		override fun BlockStateProvider.buildModelsAndStates() {
-//			simpleBlockWithItem(ModBlocks.DUNGEON_NEXUS, cubeAll(ModBlocks.DUNGEON_NEXUS))
+//			simpleBlockWithItem(ModBlocks_Builder.DUNGEON_NEXUS, cubeAll(ModBlocks_Builder.DUNGEON_NEXUS))
 //		}
 	}
 }
 
-class TileDungeonNexus(pos: BlockPos, state: BlockState) : BlockEntity(ModBlocks.DUNGEON_NEXUS_ENTITY, pos, state) {
+class TileDungeonNexus(pos: BlockPos, state: BlockState) : BlockEntity(ModBlocks_Builder.DUNGEON_NEXUS_ENTITY, pos, state) {
 	
 	// TODO
 	

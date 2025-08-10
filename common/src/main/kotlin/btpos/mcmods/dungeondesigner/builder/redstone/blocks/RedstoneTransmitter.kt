@@ -21,7 +21,7 @@ import btpos.mcmods.dungeondesigner.builder.redstone.IWirelessRedstone.Companion
 import btpos.mcmods.dungeondesigner.builder.redstone.IWirelessRedstoneTransmitter
 import btpos.mcmods.dungeondesigner.builder.redstone.items.ItemRemoteLinker
 import btpos.mcmods.dungeondesigner.builder.world.dungeonBuilderData
-import btpos.mcmods.dungeondesigner.registry.ModBlocks
+import btpos.mcmods.dungeondesigner.registry.ModBlocks_Builder
 import btpos.mcmods.dungeondesigner.registry.ModItemComponents
 import btpos.mcmods.dungeondesigner.registry.ModItems
 import net.minecraft.core.BlockPos
@@ -58,7 +58,7 @@ import java.util.function.Consumer
  */
 class BlockRedstoneTransmitter(props: Properties) : Block(props), BlockWithEntity<TileRedstoneTransmitter>, WirelessRedstoneBlock, IPlatformConnectRedstone {
 	companion object {
-		const val id = "redstone_transmitter"
+		const val id = "builder/redstone_transmitter"
 		/*
 		@Suppress("DuplicatedCode")
 		override fun BlockStateProvider.buildModelsAndStates() {
@@ -67,7 +67,7 @@ class BlockRedstoneTransmitter(props: Properties) : Block(props), BlockWithEntit
 			val off = models().cubeColumn(id.powered(false), "${txBase}_sides".powered(false).blockLoc(), "${txBase}_top".powered(false).blockLoc())
 			val on = models().cubeColumn(id.powered(true), "${txBase}_sides".powered(true).blockLoc(), "${txBase}_top".powered(true).blockLoc())
 			
-			variantDsl(ModBlocks.REDSTONE_TRANSMITTER) {
+			variantDsl(ModBlocks_Builder.REDSTONE_TRANSMITTER) {
 				POWERED {
 					true {
 						model {
@@ -82,7 +82,7 @@ class BlockRedstoneTransmitter(props: Properties) : Block(props), BlockWithEntit
 				}
 			}
 			
-			simpleBlockItem(ModBlocks.REDSTONE_TRANSMITTER, off)
+			simpleBlockItem(ModBlocks_Builder.REDSTONE_TRANSMITTER, off)
 		}*/
 	}
 	
@@ -96,7 +96,7 @@ class BlockRedstoneTransmitter(props: Properties) : Block(props), BlockWithEntit
 		pBuilder.add(POWERED)
 	}
 	
-	override fun getEntityType() = ModBlocks.REDSTONE_TRANSMITTER_ENTITY
+	override fun getEntityType() = ModBlocks_Builder.REDSTONE_TRANSMITTER_ENTITY
 	//endregion
 	
 	override fun setPlacedBy(
@@ -108,7 +108,7 @@ class BlockRedstoneTransmitter(props: Properties) : Block(props), BlockWithEntit
 	) {
 		super.setPlacedBy(pLevel, pPos, pState, pPlacer, pStack)
 
-//        if (pStack.item !== ModBlocks.REDSTONE_TRANSMITTER_ITEM)
+//        if (pStack.item !== ModBlocks_Builder.REDSTONE_TRANSMITTER_ITEM)
 //            return
 //
 //        if (!pLevel.isClientSide) {
@@ -176,14 +176,14 @@ class BlockRedstoneTransmitter(props: Properties) : Block(props), BlockWithEntit
 	//endregion
 	
 	override fun asItem(): Item {
-		return ModBlocks.REDSTONE_TRANSMITTER_ITEM
+		return ModBlocks_Builder.REDSTONE_TRANSMITTER_ITEM
 	}
 	
 	
 }
 
 class TileRedstoneTransmitter(pPos: BlockPos, pState: BlockState, val redstone: IWirelessRedstone.Mutable = IWirelessRedstone.Mutable(NO_CHANNEL))
-	: BlockEntity(ModBlocks.REDSTONE_TRANSMITTER_ENTITY, pPos, pState), IWirelessRedstoneTransmitter, IWirelessRedstone by redstone {
+	: BlockEntity(ModBlocks_Builder.REDSTONE_TRANSMITTER_ENTITY, pPos, pState), IWirelessRedstoneTransmitter, IWirelessRedstone by redstone {
 	init {
 		redstone.onChange = this::setChanged
 	}
@@ -222,7 +222,7 @@ class TileRedstoneTransmitter(pPos: BlockPos, pState: BlockState, val redstone: 
 	}
 }
 
-class ItemBlockRedstoneTransmitter(props: Properties) : BlockItem(ModBlocks.REDSTONE_TRANSMITTER, props) {
+class ItemBlockRedstoneTransmitter(props: Properties) : BlockItem(ModBlocks_Builder.REDSTONE_TRANSMITTER, props) {
 	override fun useOn(pContext: UseOnContext): InteractionResult {
 		val target = pContext.targetBlockEntity
 		

@@ -23,7 +23,7 @@ import btpos.mcmods.dungeondesigner.builder.world.dungeonBuilderData
 import btpos.mcmods.dungeondesigner.common.nbtadapters.getDisplayName
 import btpos.mcmods.dungeondesigner.common.nbtadapters.setDisplayName
 import btpos.mcmods.dungeondesigner.compiled.saveddata.FlagName
-import btpos.mcmods.dungeondesigner.registry.ModBlocks
+import btpos.mcmods.dungeondesigner.registry.ModBlocks_Builder
 import btpos.mcmods.dungeondesigner.registry.ModItems
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
@@ -57,13 +57,13 @@ import kotlin.jvm.optionals.getOrNull
 abstract class AbstractFlagHolderBlock(props: Properties) : Block(props), EntityBlock {
 	//region Configuration
 	
-	override fun newBlockEntity(pPos: BlockPos, pState: BlockState): BlockEntity? = ModBlocks.FLAG_BLOCK_ENTITY.create(pPos, pState)
+	override fun newBlockEntity(pPos: BlockPos, pState: BlockState): BlockEntity? = ModBlocks_Builder.FLAG_BLOCK_ENTITY.create(pPos, pState)
 	//endregion
 	
 	//region Interaction
 	override fun useItemOn(itemInHand: ItemStack, pState: BlockState, pLevel: Level, pPos: BlockPos, pPlayer: Player, pHand: InteractionHand, pHit: BlockHitResult): InteractionResult
 	{
-		val ourEnt = pLevel.blockEntity(pPos, ModBlocks.FLAG_BLOCK_ENTITY) ?: return InteractionResult.PASS
+		val ourEnt = pLevel.blockEntity(pPos, ModBlocks_Builder.FLAG_BLOCK_ENTITY) ?: return InteractionResult.PASS
 		
 		// Pop out trigger item into world if it exists
 		if (pPlayer.isShiftKeyDown && ourEnt.hasFlag()) {
@@ -99,7 +99,7 @@ abstract class AbstractFlagHolderBlock(props: Properties) : Block(props), Entity
 
 class BlockFlagReader(props: Properties) : AbstractFlagHolderBlock(props), IPlatformConnectRedstone {
 	companion object  {
-		const val id = "flag_reader"
+		const val id = "builder/flag_reader"
 	}
 	
 	init {
@@ -152,8 +152,8 @@ class BlockFlagWriter(props: Properties, /** True = is a "setter", false = is a 
 	companion object {
 		val FACING = BlockStateProperties.HORIZONTAL_FACING
 		
-		const val id_setter = "flag_setter"
-		const val id_resetter = "flag_resetter"
+		const val id_setter = "builder/flag_setter"
+		const val id_resetter = "builder/flag_resetter"
 	}
 	
 	init {
@@ -185,7 +185,7 @@ class BlockFlagWriter(props: Properties, /** True = is a "setter", false = is a 
 		if (!pLevel.hasSignal(pNeighborPos, pDirection))
 			return;
 		
-		val ourFlag = pLevel.blockEntity(pNeighborPos, ModBlocks.FLAG_BLOCK_ENTITY)!!.flagName ?: return
+		val ourFlag = pLevel.blockEntity(pNeighborPos, ModBlocks_Builder.FLAG_BLOCK_ENTITY)!!.flagName ?: return
 		
 		val newvalue = isSetter
 		
@@ -202,7 +202,7 @@ class BlockFlagWriter(props: Properties, /** True = is a "setter", false = is a 
 }
 
 
-class TileFlagHolder(pPos: BlockPos, pState: BlockState) : BlockEntity(ModBlocks.FLAG_BLOCK_ENTITY, pPos, pState)
+class TileFlagHolder(pPos: BlockPos, pState: BlockState) : BlockEntity(ModBlocks_Builder.FLAG_BLOCK_ENTITY, pPos, pState)
 {
 	class State(
 		pFlagName: FlagName? = null,

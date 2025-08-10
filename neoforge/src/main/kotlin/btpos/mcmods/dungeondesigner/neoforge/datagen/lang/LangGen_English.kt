@@ -3,7 +3,7 @@
 package btpos.mcmods.dungeondesigner.neoforge.datagen.lang
 
 import btpos.mcmods.dungeondesigner.MODID
-import btpos.mcmods.dungeondesigner.registry.ModBlocks
+import btpos.mcmods.dungeondesigner.registry.ModBlocks_Builder
 import btpos.mcmods.dungeondesigner.registry.ModItems
 import net.minecraft.data.PackOutput
 import net.minecraft.world.item.Item
@@ -18,7 +18,7 @@ class LangGen_English(output: PackOutput) : LanguageProvider(output, MODID, "en_
 	}
 	
 	fun addBlocks() {
-		with (ModBlocks) {
+		with (ModBlocks_Builder) {
 			DUNGEON_NEXUS("Dungeon Nexus")
 			
 			TRIGGER_BLOCK("Trigger Watcher")

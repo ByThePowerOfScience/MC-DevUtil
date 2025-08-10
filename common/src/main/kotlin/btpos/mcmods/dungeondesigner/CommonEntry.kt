@@ -1,7 +1,7 @@
 package btpos.mcmods.dungeondesigner
 
 import btpos.mcmods.dungeondesigner.debugging.DebugCommands
-import btpos.mcmods.dungeondesigner.registry.ModBlocks
+import btpos.mcmods.dungeondesigner.registry.ModBlocks_Builder
 import btpos.mcmods.dungeondesigner.registry.ModCreativeTabs
 import btpos.mcmods.dungeondesigner.registry.ModItemComponents
 import btpos.mcmods.dungeondesigner.registry.ModItems
@@ -22,7 +22,7 @@ object CommonEntry {
         MOD_LOGGER.log(Level.INFO, "$MODID has started!")
         
         CommandRegistrationEvent.EVENT.register(::registerCommands)
-        ModBlocks.register()
+        ModBlocks_Builder.register()
         ModItems.register()
         ModItemComponents.register()
         ModCreativeTabs.register()

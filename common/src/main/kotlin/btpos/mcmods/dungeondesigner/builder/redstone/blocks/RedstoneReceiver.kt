@@ -19,7 +19,7 @@ import btpos.mcmods.dungeondesigner.POWERED
 import btpos.mcmods.dungeondesigner.builder.redstone.IWirelessRedstone
 import btpos.mcmods.dungeondesigner.builder.redstone.IWirelessRedstone.Companion.NO_CHANNEL
 import btpos.mcmods.dungeondesigner.builder.world.dungeonBuilderData
-import btpos.mcmods.dungeondesigner.registry.ModBlocks
+import btpos.mcmods.dungeondesigner.registry.ModBlocks_Builder
 import btpos.mcmods.dungeondesigner.registry.ModItemComponents
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
@@ -54,7 +54,7 @@ import java.util.function.Consumer
  */
 class BlockRedstoneReceiver(props: Properties) : Block(props), BlockWithEntity<TileRedstoneReceiver>, WirelessRedstoneBlock, IPlatformConnectRedstone {
     companion object {
-        const val id = "redstone_receiver"
+        const val id = "builder/redstone_receiver"
     }
     
     //region Setup
@@ -67,7 +67,7 @@ class BlockRedstoneReceiver(props: Properties) : Block(props), BlockWithEntity<T
         pBuilder.add(POWERED)
     }
     
-    override fun getEntityType() = ModBlocks.REDSTONE_RECEIVER_ENTITY
+    override fun getEntityType() = ModBlocks_Builder.REDSTONE_RECEIVER_ENTITY
     //endregion
     
     //region Placement
@@ -80,7 +80,7 @@ class BlockRedstoneReceiver(props: Properties) : Block(props), BlockWithEntity<T
     ) {
         super.setPlacedBy(pLevel, pPos, pState, pPlacer, pStack)
         
-        if (pStack.item !== ModBlocks.REDSTONE_RECEIVER_ITEM)
+        if (pStack.item !== ModBlocks_Builder.REDSTONE_RECEIVER_ITEM)
             return
         
         if (!pLevel.isClientSide) {
@@ -110,12 +110,12 @@ class BlockRedstoneReceiver(props: Properties) : Block(props), BlockWithEntity<T
     //endregion
     
     override fun asItem(): Item {
-        return ModBlocks.REDSTONE_RECEIVER_ITEM
+        return ModBlocks_Builder.REDSTONE_RECEIVER_ITEM
     }
 }
 
 class TileRedstoneReceiver(pPos: BlockPos, pState: BlockState, val redstone: IWirelessRedstone.Mutable = IWirelessRedstone.Mutable(NO_CHANNEL))
-    : BlockEntity(ModBlocks.REDSTONE_RECEIVER_ENTITY, pPos, pState), IWirelessRedstone by redstone
+    : BlockEntity(ModBlocks_Builder.REDSTONE_RECEIVER_ENTITY, pPos, pState), IWirelessRedstone by redstone
 {
     override fun loadAdditional(input: ValueInput) {
         super.loadAdditional(input)
@@ -160,7 +160,7 @@ class TileRedstoneReceiver(pPos: BlockPos, pState: BlockState, val redstone: IWi
 /**
  * Allows us to right-click on a transmitter or receiver in the world and copy its channel
  */
-class ItemBlockRedstoneReceiver(props: Properties) : BlockItem(ModBlocks.REDSTONE_RECEIVER, props) {
+class ItemBlockRedstoneReceiver(props: Properties) : BlockItem(ModBlocks_Builder.REDSTONE_RECEIVER, props) {
     
     @Suppress("DuplicatedCode")
     override fun useOn(pContext: UseOnContext): InteractionResult {

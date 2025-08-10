@@ -11,7 +11,7 @@ import btpos.mcmods.dungeondesigner.builder.blocks.actors.BlockTriggerHolder
 import btpos.mcmods.dungeondesigner.builder.blocks.actors.FightStatus
 import btpos.mcmods.dungeondesigner.builder.redstone.blocks.BlockRedstoneReceiver
 import btpos.mcmods.dungeondesigner.builder.redstone.blocks.BlockRedstoneTransmitter
-import btpos.mcmods.dungeondesigner.registry.ModBlocks
+import btpos.mcmods.dungeondesigner.registry.ModBlocks_Builder
 import btpos.mcmods.dungeondesigner.registry.ModItems
 import net.minecraft.client.data.models.BlockModelGenerators
 import net.minecraft.client.data.models.BlockModelGenerators.plainVariant
@@ -61,7 +61,7 @@ class ModelDataGen(output: PackOutput) : ModelProvider(output, MODID) {
 	
 	//region Block Models
 	private fun BlockModelGenerators.makeDungeonNexus() {
-		createTrivialCube(ModBlocks.DUNGEON_NEXUS)
+		createTrivialCube(ModBlocks_Builder.DUNGEON_NEXUS)
 	}
 	
 	private fun BlockModelGenerators.makeTriggerBlock() {
@@ -73,11 +73,11 @@ class ModelDataGen(output: PackOutput) : ModelProvider(output, MODID) {
 		val off = columnModel(BlockTriggerHolder.id.powered(false), blockLoc(TEXTURE_SIDES), blockLoc(TEXTURE_TOP_BOTTOM))
 		val on = columnModel(BlockTriggerHolder.id.powered(true), blockLoc(TEXTURE_SIDES_ON), blockLoc(TEXTURE_TOP_BOTTOM_ON))
 		
-		MultiVariantGenerator.dispatch(ModBlocks.TRIGGER_BLOCK)
+		MultiVariantGenerator.dispatch(ModBlocks_Builder.TRIGGER_BLOCK)
 			.with(poweredInitialVariants(off, on))
 			.submit()
 		
-		registerSimpleItemModel(ModBlocks.TRIGGER_BLOCK, off)
+		registerSimpleItemModel(ModBlocks_Builder.TRIGGER_BLOCK, off)
 	}
 	
 	private fun BlockModelGenerators.makeFightController() {
@@ -95,7 +95,7 @@ class ModelDataGen(output: PackOutput) : ModelProvider(output, MODID) {
 		val com = sidedBlock(id + "_complete", t_com, t_com, out_com, t_com, t_com, t_com)
 		val in_progress = sidedBlock(id + "_ip", t_ip, t_ip, out_ip, t_ip, t_ip, t_ip)
 		
-		MultiVariantGenerator.dispatch(ModBlocks.FIGHT_CONTROLLER)
+		MultiVariantGenerator.dispatch(ModBlocks_Builder.FIGHT_CONTROLLER)
 			.with(
 					BlockFightController.STATUS(
 							FightStatus.INACTIVE to plainVariant(off),
@@ -103,18 +103,18 @@ class ModelDataGen(output: PackOutput) : ModelProvider(output, MODID) {
 							FightStatus.COMPLETE to plainVariant(com)
 			)).with(ROTATION_HORIZONTAL_FACING).submit()
 		
-		registerSimpleItemModel(ModBlocks.FIGHT_CONTROLLER, off)
+		registerSimpleItemModel(ModBlocks_Builder.FIGHT_CONTROLLER, off)
 	}
 	
 	private fun BlockModelGenerators.makeFlagReader() {
 		val off = sidedBlock(BlockFlagReader.id.powered(false), rest=blockLoc("flag/${BlockFlagReader.id.powered(false)}"))
 		val on = sidedBlock(BlockFlagReader.id.powered(true), rest=blockLoc("flag/${BlockFlagReader.id.powered(true)}"))
 		
-		MultiVariantGenerator.dispatch(ModBlocks.FLAG_READER)
+		MultiVariantGenerator.dispatch(ModBlocks_Builder.FLAG_READER)
 			.with(poweredInitialVariants(off, on))
 			.submit()
 		
-		registerSimpleItemModel(ModBlocks.FLAG_READER, off)
+		registerSimpleItemModel(ModBlocks_Builder.FLAG_READER, off)
 	}
 	
 	@Suppress("DuplicatedCode")
@@ -129,11 +129,11 @@ class ModelDataGen(output: PackOutput) : ModelProvider(output, MODID) {
 			
 			val setter_off = sidedBlock(setterLoc.powered(false), north=getTexture(setterLoc, false, input=true), rest=getTexture(setterLoc, false))
 			
-			MultiVariantGenerator.dispatch(ModBlocks.FLAG_SETTER, plainVariant(setter_off))
+			MultiVariantGenerator.dispatch(ModBlocks_Builder.FLAG_SETTER, plainVariant(setter_off))
 				.with(ROTATION_HORIZONTAL_FACING)
 				.submit()
 			
-			registerSimpleItemModel(ModBlocks.FLAG_SETTER, setter_off)
+			registerSimpleItemModel(ModBlocks_Builder.FLAG_SETTER, setter_off)
 		}
 
 		fun BlockModelGenerators.forResetter() {
@@ -141,11 +141,11 @@ class ModelDataGen(output: PackOutput) : ModelProvider(output, MODID) {
 			
 			val setter_off = sidedBlock(setterLoc.powered(false), north=getTexture(setterLoc, false, input=true), rest=getTexture(setterLoc, false))
 			
-			MultiVariantGenerator.dispatch(ModBlocks.FLAG_RESETTER, plainVariant(setter_off))
+			MultiVariantGenerator.dispatch(ModBlocks_Builder.FLAG_RESETTER, plainVariant(setter_off))
 				.with(ROTATION_HORIZONTAL_FACING)
 				.submit()
 			
-			registerSimpleItemModel(ModBlocks.FLAG_RESETTER, setter_off)
+			registerSimpleItemModel(ModBlocks_Builder.FLAG_RESETTER, setter_off)
 		}
 	}
 	
@@ -157,11 +157,11 @@ class ModelDataGen(output: PackOutput) : ModelProvider(output, MODID) {
 			val off = columnModel(BlockRedstoneTransmitter.Companion.id.powered(false), blockLoc("${txSpecific}_sides").powered(false), blockLoc("${txSpecific}_top").powered(false))
 			val on = columnModel(BlockRedstoneTransmitter.Companion.id.powered(true), blockLoc("${txSpecific}_sides").powered(true), blockLoc("${txSpecific}_top").powered(true))
 			
-			MultiVariantGenerator.dispatch(ModBlocks.REDSTONE_TRANSMITTER)
+			MultiVariantGenerator.dispatch(ModBlocks_Builder.REDSTONE_TRANSMITTER)
 				.with(poweredInitialVariants(off, on))
 				.submit()
 			
-			registerSimpleItemModel(ModBlocks.REDSTONE_TRANSMITTER, off)
+			registerSimpleItemModel(ModBlocks_Builder.REDSTONE_TRANSMITTER, off)
 		}
 		
 		fun BlockModelGenerators.forReceiver() {
@@ -169,12 +169,12 @@ class ModelDataGen(output: PackOutput) : ModelProvider(output, MODID) {
 			val off = columnModel(BlockRedstoneReceiver.Companion.id.powered(false), blockLoc("${txSpecific}_sides").powered(false), blockLoc("${txSpecific}_top").powered(false))
 			val on = columnModel(BlockRedstoneReceiver.Companion.id.powered(true), blockLoc("${txSpecific}_sides").powered(true), blockLoc("${txSpecific}_top").powered(true))
 			
-			MultiVariantGenerator.dispatch(ModBlocks.REDSTONE_RECEIVER)
+			MultiVariantGenerator.dispatch(ModBlocks_Builder.REDSTONE_RECEIVER)
 				.with(poweredInitialVariants(off, on))
 				.submit()
 			
 			
-			registerSimpleItemModel(ModBlocks.REDSTONE_RECEIVER, off)
+			registerSimpleItemModel(ModBlocks_Builder.REDSTONE_RECEIVER, off)
 		}
 	}
 	//endregion

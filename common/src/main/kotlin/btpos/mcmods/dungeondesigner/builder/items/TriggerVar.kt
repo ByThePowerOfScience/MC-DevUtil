@@ -33,7 +33,7 @@ import kotlin.jvm.optionals.getOrNull
  */
 class ItemTriggerVariable(props: Properties) : Item(props) {
 	companion object {
-		const val id = "trigger_variable"
+		const val id = "builder/trigger_variable"
 		
 		// NBT Tag Keys
 		const val TAGKEY_STATE = "trigger_brush"

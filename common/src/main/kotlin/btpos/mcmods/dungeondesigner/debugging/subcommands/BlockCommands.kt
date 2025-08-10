@@ -12,7 +12,7 @@ import btpos.mcmods.dungeondesigner.builder.nbt.toComponent
 import btpos.mcmods.dungeondesigner.debugging.CommandBuilder
 import btpos.mcmods.dungeondesigner.debugging.CommandContext
 import btpos.mcmods.dungeondesigner.debugging.CommandHandler
-import btpos.mcmods.dungeondesigner.registry.ModBlocks
+import btpos.mcmods.dungeondesigner.registry.ModBlocks_Builder
 import net.minecraft.ChatFormatting
 import net.minecraft.core.BlockPos
 import net.minecraft.network.chat.Component
@@ -26,7 +26,7 @@ object BlockCommands : CommandHandler {
                 "get_pipettes" {
                     executes { ctx ->
                        val pos = getLookedAtPos(ctx) ?: return@executes 0
-                        val ent = ctx.source.level.blockEntity(pos, ModBlocks.FIGHT_CONTROLLER_ENTITY) ?: return@executes ctx.sendFailure("No fight controller at pos $pos".asComponent())
+                        val ent = ctx.source.level.blockEntity(pos, ModBlocks_Builder.FIGHT_CONTROLLER_ENTITY) ?: return@executes ctx.sendFailure("No fight controller at pos $pos".asComponent())
                         
                         val data = ent.getPipetteData() ?: return@executes ctx.sendFailure("No pipette data found for entity at $pos.".asComponent())
                         
@@ -39,7 +39,7 @@ object BlockCommands : CommandHandler {
                 "trigger" {
                     executes { ctx ->
                         val pos = getLookedAtPos(ctx) ?: return@executes 0
-                        val ent = ctx.source.level.blockEntity(pos, ModBlocks.FIGHT_CONTROLLER_ENTITY) ?: return@executes ctx.sendFailure("No fight controller at pos $pos".asComponent())
+                        val ent = ctx.source.level.blockEntity(pos, ModBlocks_Builder.FIGHT_CONTROLLER_ENTITY) ?: return@executes ctx.sendFailure("No fight controller at pos $pos".asComponent())
                         
                         ent.startFight()
                         
@@ -50,7 +50,7 @@ object BlockCommands : CommandHandler {
                     executes { ctx ->
                         val pos = getLookedAtPos(ctx) ?: return@executes ctx.sendFailure("Not looking at block.")
                         val block = ctx.source.level.getBlockState(pos).also {
-                            if (!it.`is`(ModBlocks.FIGHT_CONTROLLER)) {
+                            if (!it.`is`(ModBlocks_Builder.FIGHT_CONTROLLER)) {
                                 return@executes ctx.sendFailure("No fight controller at pos $pos")
                             }
                         }
