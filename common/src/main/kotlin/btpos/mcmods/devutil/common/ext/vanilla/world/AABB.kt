@@ -27,10 +27,8 @@ fun AABB.getMaxCornerBlock(): BlockPos {
 @JvmInline
 value class BlockInclusiveAABB private constructor(val bb: AABB) {
 	fun toBlockExclusiveAABB(): AABB {
-		return bb.apply {
-			maxX -= 1
-			maxY -= 1
-			maxZ -= 1
+		return bb.run {
+			AABB(minX, minY, minZ, maxX - 1, maxY - 1, maxZ - 1)
 		}
 	}
 	
@@ -56,4 +54,8 @@ value class BlockInclusiveAABB private constructor(val bb: AABB) {
 
 fun aabbOf(pos1: BlockPos, pos2: BlockPos): AABB {
 	return AABB(pos1.x.toDouble(), pos1.y.toDouble(), pos1.z.toDouble(), pos2.x.toDouble(), pos2.y.toDouble(), pos2.z.toDouble())
+}
+
+fun AABB.clone(): AABB {
+	return AABB(minX, minY, minZ, maxX, maxY, maxZ)
 }
