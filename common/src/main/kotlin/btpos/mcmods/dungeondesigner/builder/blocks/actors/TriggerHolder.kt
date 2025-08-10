@@ -69,7 +69,7 @@ class BlockTriggerHolder(
 		registerDefaultState(stateDefinition.any().with(POWERED, false))
 	}
 	
-	companion object{
+	companion object {
 		const val id = "trigger_holder"
 	}
 	
