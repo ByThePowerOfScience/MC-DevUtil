@@ -61,10 +61,16 @@ dependencies {
 }
 
 tasks.processResources {
-	inputs.property ("version", project.version)
+	val replaceMap = mapOf(
+			"version" to rootProject.version,
+			"mod_id" to rootProject.property("mod_id"),
+			"mod_name" to rootProject.property("mod_name"),
+			"mod_desc" to rootProject.property("mod_desc")
+	)
+	inputs.properties(replaceMap)
 	
 	filesMatching("fabric.mod.json") {
-		expand ("version" to project.version)
+		expand(replaceMap)
 	}
 }
 

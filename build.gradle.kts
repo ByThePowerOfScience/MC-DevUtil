@@ -1,4 +1,7 @@
 
+import btpos.gradle.architectury.transformerplugin.attributes.ModuleType
+import btpos.gradle.architectury.transformerplugin.attributes.ObfType
+import btpos.gradle.architectury.transformerplugin.attributes.PlatformType
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
@@ -8,6 +11,7 @@ plugins {
 	id("com.github.johnrengelman.shadow") version "8.1.1" apply false
 	id("common-platform-transformer") apply false
 	kotlin("jvm") version "2.1.21"
+	`maven-publish`
 }
 
 val Project.loom: net.fabricmc.loom.api.LoomGradleExtensionAPI
@@ -20,7 +24,7 @@ fun Project.prop(name: String): String {
 configurations {
 	create("common-main-deobf") {
 		attributes {
-//			attribute()
+		
 		}
 	}
 }
@@ -53,7 +57,7 @@ subprojects {
 	
 	base {
 		// Set up a suffixed format for the mod jar names, e.g. `example-fabric`.
-		archivesName = "${rootProject.prop("archives_name")}-${project.prop("name")}"
+		archivesName = "${rootProject.prop("mod_id")}-${project.prop("name")}"
 	}
 	
 	repositories {
@@ -93,6 +97,7 @@ subprojects {
 		// if it is present.
 		// If you remove this line, sources will not be generated.
 		withSourcesJar()
+		withJavadocJar()
 		
 		sourceCompatibility = JavaVersion.VERSION_21
 		targetCompatibility = JavaVersion.VERSION_21
@@ -109,66 +114,111 @@ subprojects {
 			freeCompilerArgs.add("-Xcontext-receivers")
 		}
 	}
-	
-	if (project.name != "common"){
-		val transformedCommonTest by configurations.creating {
-			isCanBeConsumed = false
-			isCanBeResolved = true
-//			attributes {
-//				attribute(ArchAttributes.SOURCES_TYPE, "test")
-//				attribute(ArchAttributes.PLATFORM, project.name)
-//			}
-		}
-		
-		dependencies {
-			add("transformedCommonTest", project(":common"))
-		}
-		
-//		tasks.withType<Test> {
-//			useJUnitPlatform()
-//			val testJarTransformed = transformedCommonTest.resolve().first()
-//			testClassesDirs += zipTree(testJarTransformed)
-//			this@withType.classpath += project.configurations.compileClasspath.get()
-//			this@withType.classpath += project.configurations.runtimeClasspath.get()
-//			this@withType.classpath += project.configurations.testCompileClasspath.get()
-//			this@withType.classpath += project.configurations.testRuntimeClasspath.get()
-//			this@withType.classpath += transformedCommonTest
-//		}
-	}
-	
-	
-	
-	
-	// Configure Maven publishing.
-//	publishing {
-//		publications {
-//			"mavenJava"<MavenPublication> {
-//				artifactId = base.archivesName.get()
-//				from(components.java)
-//			}
-//		}
-//
-//		// See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-//		repositories {
-//			// Add repositories to publish to here.
-//			// Notice=This block does NOT have the same function as the block in the top level.
-//			// The repositories here will be used for publishing your artifact, not for
-//			// retrieving dependencies.
-//		}
-//	}
 }
 
-//// Make the rootproject "test" task only run the tests in NeoForge
-////      and not execute any tests in common where they're doomed to fail.
-//tasks.replace("test", Test::class.java).configure<Task> {
-//	dependsOn(project(":neoforge").tasks.test)
-//}
-//
-//// Create a testAll task that runs the unit tests for every platform
-//tasks.register<DefaultTask>("testAll").configure<DefaultTask> {
-//	subprojects.filter { "common" !in it.name }
-//		.map { it.tasks.test }
-//		.forEach {
-//			this@configure.dependsOn(it)
-//		}
-//}
+//region Variants, Outputs, and Publishing
+fun makeOutputsForPlatform(platformName: String): Triple<Configuration, Configuration, Configuration> {
+	fun AttributeContainer.forAllOutgoing() {
+		attribute(ModuleType.ATTRIBUTE, objects.named(ModuleType.MAIN))
+		attribute(LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE, objects.named(LibraryElements.JAR))
+	}
+	
+	fun AttributeContainer.sources() {
+		attribute(ObfType.ATTRIBUTE, objects.named(ObfType.DEOBF))
+		attribute(Usage.USAGE_ATTRIBUTE, objects.named(Usage.JAVA_API))
+		forAllOutgoing()
+	}
+	
+	fun AttributeContainer.runtime(isObf: Boolean) {
+		val attr = if (isObf) ObfType.OBF else ObfType.DEOBF
+		attribute(ObfType.ATTRIBUTE, objects.named(attr))
+		attribute(Usage.USAGE_ATTRIBUTE, objects.named(Usage.JAVA_RUNTIME))
+		forAllOutgoing()
+	}
+	
+	// Solely the sources for the platform-specific project
+	val sources = configurations.create("${platformName}_source").apply {
+		isCanBeConsumed = true
+		isCanBeResolved = false
+		
+		description = "Solely the sources for this platform's platform-specific code, without any common stuff included."
+		
+		attributes {
+			attribute(PlatformType.ATTRIBUTE, objects.named(platformName))
+			sources()
+		}
+	}
+	
+	val dev_runtime = configurations.create("${platformName}_dev").apply {
+		isCanBeConsumed = true
+		isCanBeResolved = false
+		
+		description = "The compiled and transformed platform-specific code for use in dev runs, still without the common module shaded."
+		
+		attributes {
+			attribute(PlatformType.ATTRIBUTE, objects.named(platformName))
+			runtime(false)
+		}
+		
+		outgoing {
+			capability("$group:$name-$platformName:$version")
+		}
+	}
+	
+	val prod_runtime = configurations.create("${platformName}_prod").apply {
+		isCanBeConsumed = true
+		isCanBeResolved = false
+		
+		description = "The obfuscated production variant, with all code merged, transformed, and mapped for client use."
+		
+		attributes {
+			attribute(PlatformType.ATTRIBUTE, objects.named(platformName))
+			runtime(true)
+		}
+		
+		outgoing {
+			capability("$group:$name-$platformName:$version")
+		}
+	}
+	
+	artifacts {
+		val proj = project(":$platformName")
+		add(sources.name, proj.tasks["sourcesJar"])
+		add(dev_runtime.name, proj.tasks.jar)
+		add(prod_runtime.name, tasks.getByPath(":$platformName:shadowJar"))
+	}
+	
+	return Triple(sources, dev_runtime, prod_runtime)
+}
+
+val (neoforge_source, neoforge_dev, neoforge_prod) = makeOutputsForPlatform(PlatformType.NEOFORGE)
+val (fabric_source, fabric_dev, fabric_prod) = makeOutputsForPlatform(PlatformType.FABRIC)
+
+val common_sources by configurations.creating {
+	isCanBeConsumed = true
+	isCanBeResolved = false
+	
+	attributes {
+		attribute(ModuleType.ATTRIBUTE, objects.named(ModuleType.MAIN))
+		attribute(Usage.USAGE_ATTRIBUTE, objects.named(Usage.JAVA_API))
+		attribute(LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE, objects.named(LibraryElements.JAR))
+		attribute(DocsType.DOCS_TYPE_ATTRIBUTE, objects.named(DocsType.SOURCES))
+	}
+}
+
+artifacts {
+	add(common_sources.name, project(":common").tasks["sourcesJar"])
+}
+
+(components.findByName("java") as AdhocComponentWithVariants).run {
+	addVariantsFromConfiguration(common_sources) {
+		mapToMavenScope("compile")
+	}
+	
+	listOf(neoforge_dev, fabric_dev, neoforge_prod, fabric_prod).forEach {
+		addVariantsFromConfiguration(it) {
+			mapToMavenScope("runtime")
+		}
+	}
+}
+//endregion

@@ -4,30 +4,30 @@ loaderVersion = "[5,)"
 license = "MIT"
 
 [[mods]]
-    modId = "dungeondesigner"
+    modId = "${mod_id}"
     version = "${version}"
-    displayName = "DungeonDesigner"
+    displayName = "${mod_name}"
     authors = ""
     description = '''
-
+${mod_desc}
 '''
 #logoFile = ""
 
-[[dependencies.dungeondesigner]]
+[[dependencies.${mod_id}]]
     modId = "neoforge"
     type = "required"
     versionRange = "[21,)"
     ordering = "NONE"
     side = "BOTH"
 
-[[dependencies.dungeondesigner]]
+[[dependencies.${mod_id}]]
     modId = "minecraft"
     type = "required"
     versionRange = "[1.21.8,)"
     ordering = "NONE"
     side = "BOTH"
 
-[[dependencies.dungeondesigner]]
+[[dependencies.${mod_id}]]
     modId = "architectury"
     type = "required"
     versionRange = "[17.0.8,)"
@@ -35,4 +35,4 @@ license = "MIT"
     side = "BOTH"
 
 [[mixins]]
-    config = "dungeondesigner.mixins.json"
+    config = "${mod_id}.mixins.json"

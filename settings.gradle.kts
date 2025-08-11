@@ -8,7 +8,7 @@ pluginManagement {
 }
 
 
-rootProject.name = "dungeondesigner"
+rootProject.name = "devutil"
 
 include("common", "fabric", "neoforge")
 includeBuild("basetransformerplugin")

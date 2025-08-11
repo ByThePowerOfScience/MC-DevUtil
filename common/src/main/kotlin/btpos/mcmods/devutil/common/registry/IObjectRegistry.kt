@@ -70,8 +70,8 @@ fun <T : BlockEntity> BlockEntityType(factory: (BlockPos, BlockState) -> T, vara
 typealias PlatformRegistry<T> = DeferredRegister<T>
 
 interface IObjectRegistry {
-	fun <T> createRegistry(key: ResourceKey<Registry<T>>): PlatformRegistry<T> {
-		return DeferredRegister.create(MODID, key)
+	fun <T> createRegistry(id: String, key: ResourceKey<Registry<T>>): PlatformRegistry<T> {
+		return DeferredRegister.create(id, key)
 	}
 	
 	fun register()

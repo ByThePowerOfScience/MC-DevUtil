@@ -29,3 +29,8 @@ class APITransformerPlugin : Plugin<Project> {
 		}
 	}
 }
+
+//interface DevUtilExtension { // TODO: Dynamically inject mod id and other specified metadata
+//	val packageName: String
+//	val mod_id: String
+//}

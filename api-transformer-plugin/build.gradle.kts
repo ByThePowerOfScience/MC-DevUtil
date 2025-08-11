@@ -1,8 +1,3 @@
-//import btpos.gradle.architectury.transformerplugin.MultiplatformPreTransformer_Fabric
-//import btpos.gradle.architectury.transformerplugin.MultiplatformPreTransformer_Forge
-//import btpos.gradle.architectury.transformerplugin.attributes.ModuleType
-//import btpos.gradle.architectury.transformerplugin.attributes.PlatformType
-
 plugins {
 	`kotlin-dsl`
 	kotlin("jvm") version "2.1.21"
