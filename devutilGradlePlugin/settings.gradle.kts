@@ -1,9 +1,0 @@
-pluginManagement {
-	repositories {
-		gradlePluginPortal()
-		mavenCentral()
-		maven(url="https://maven.fabricmc.net/")
-		maven(url="https://maven.architectury.dev/")
-		maven(url="https://files.minecraftforge.net/maven/")
-	}
-}

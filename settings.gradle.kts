@@ -11,5 +11,5 @@ pluginManagement {
 rootProject.name = "dungeondesigner"
 
 include("common", "fabric", "neoforge")
-includeBuild("transformerPlugin")
-includeBuild("devutilGradlePlugin")
+includeBuild("basetransformerplugin")
+includeBuild("api-transformer-plugin")

@@ -30,10 +30,10 @@ class CommonPlatformTransformersPlugin : Plugin<Project> {
 		ext = project.extensions.create(PlatformTransformersPluginExtension.NAME, PlatformTransformersPluginExtension::class.java)
 		
 		project.afterEvaluate {
-			ext.apply {
+			with (ext) {
 				platforms.get().forEach { (platform, _) ->
 					tasks.get().forEach { (jarTask, moduleTypeAttr) ->
-						project.makeTransformingTask(platform, jarTask, moduleTypeAttr)
+						makeTransformingTask(platform, jarTask, moduleTypeAttr)
 					}
 				}
 			}
@@ -44,10 +44,12 @@ class CommonPlatformTransformersPlugin : Plugin<Project> {
 	/**
 	 * Make tasks and configurations that apply ONLY our transformers to the given source set.
 	 */
-	fun Project.makeTransformingTask(platform: PlatformType, jarTask: TaskProvider<out Jar>, moduleType: ModuleType) {
+	fun Project.makeTransformingTask(platform: PlatformType, jarTask: Jar, moduleType: ModuleType) {
 		val platformName = platform.name
 		
 		val configName = getConfigNameForSourceTypeAndPlatform(moduleType.name, platformName)
+		
+		println("Making configuration $configName")
 		
 		configurations.maybeCreate(configName).apply {
 			isCanBeConsumed = true
@@ -64,7 +66,7 @@ class CommonPlatformTransformersPlugin : Plugin<Project> {
 			dependsOn(jarTask)
 			group = PlatformTransformersPluginExtension.TASK_GROUP
 			
-			input.set(jarTask.get().archiveFile)
+			input.set(jarTask.archiveFile)
 			
 			this@register.platform = platformName
 			
@@ -74,8 +76,6 @@ class CommonPlatformTransformersPlugin : Plugin<Project> {
 		}
 		
 		transformerTask.get().archiveFile.get().asFile.takeIf { !it.exists() }?.createEmptyJar() // fix a filenotfound crash
-		
-		
 	}
 	
 	
@@ -107,8 +107,8 @@ class CommonPlatformTransformersPlugin : Plugin<Project> {
 		}
 		
 		@JvmStatic
-		fun transformingTaskName(jarTask: TaskProvider<out Jar>, platform: String): String {
-			return "transform_${getConfigNameForSourceTypeAndPlatform(jarTask.get().name, platform)}"
+		fun transformingTaskName(jarTask: Jar, platform: String): String {
+			return "devJar_${jarTask.name}_$platform"
 		}
 		
 		@JvmStatic
@@ -129,13 +129,15 @@ interface PlatformTransformersPluginExtension {
 	
 	/**
 	 * Transformers that should be applied to all outgoing variants regardless of platform.
+	 *
+	 * @see ClassFileTransformer
 	 */
 	val commonTransformers: ListProperty<Transformer>
 	
 	/**
-	 * Names of the platforms this should make tasks for, and the transformers for said platform
+	 * Names of the platforms this should make tasks for, and the transformers for said platform.
 	 *
-	 * Same as with architectury.common(), but using `objects.named(platformName)` instead of raw strings cause it's easier to enforce strict naming on the backend
+	 * Same as with architectury.common(), but using `objects.named(platformName)` instead of raw strings cause it's easier to enforce strict naming on the backend.
 	 *
 	 * Example:
 	 * ```kotlin
@@ -146,6 +148,7 @@ interface PlatformTransformersPluginExtension {
 	 *      )
 	 * }
 	 * ```
+	 * @see ClassFileTransformer
 	 */
 	val platforms: MapProperty<PlatformType, List<Transformer>>
 	
@@ -163,5 +166,5 @@ interface PlatformTransformersPluginExtension {
 	 * }
 	 * ```
 	 */
-	val tasks: MapProperty<TaskProvider<out Jar>, ModuleType>
+	val tasks: MapProperty<Jar, ModuleType>
 }

@@ -2,7 +2,7 @@
 plugins {
 	`kotlin-dsl`
 	kotlin("jvm") version "2.1.21"
-	`maven-publish`
+	id("com.gradle.plugin-publish") version "1.2.1"
 }
 
 repositories {
@@ -12,6 +12,9 @@ repositories {
 	maven(url="https://maven.architectury.dev/")
 	maven(url="https://files.minecraftforge.net/maven/")
 }
+
+group = "btpos.gradle.architectury"
+version = "1.0"
 
 dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-gradle-plugin-api:2.1.21")
@@ -25,21 +28,9 @@ dependencies {
 
 gradlePlugin {
 	plugins {
-		create("common-platform-transformer") {
+		create("archCommonTransformer") {
 			id = "common-platform-transformer"
 			implementationClass = "btpos.gradle.architectury.transformerplugin.CommonPlatformTransformersPlugin"
-		}
-	}
-}
-
-publishing {
-	publications {
-		create<MavenPublication>("maven") {
-			groupId = "btpos.gradle.architectury"
-			artifactId = "transformerplugin"
-			version = "1.0"
-			
-			from(components["java"])
 		}
 	}
 }

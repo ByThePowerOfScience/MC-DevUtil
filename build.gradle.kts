@@ -124,16 +124,16 @@ subprojects {
 			add("transformedCommonTest", project(":common"))
 		}
 		
-		tasks.withType<Test> {
-			useJUnitPlatform()
-			val testJarTransformed = transformedCommonTest.resolve().first()
-			testClassesDirs += zipTree(testJarTransformed)
-			this@withType.classpath += project.configurations.compileClasspath.get()
-			this@withType.classpath += project.configurations.runtimeClasspath.get()
-			this@withType.classpath += project.configurations.testCompileClasspath.get()
-			this@withType.classpath += project.configurations.testRuntimeClasspath.get()
-			this@withType.classpath += transformedCommonTest
-		}
+//		tasks.withType<Test> {
+//			useJUnitPlatform()
+//			val testJarTransformed = transformedCommonTest.resolve().first()
+//			testClassesDirs += zipTree(testJarTransformed)
+//			this@withType.classpath += project.configurations.compileClasspath.get()
+//			this@withType.classpath += project.configurations.runtimeClasspath.get()
+//			this@withType.classpath += project.configurations.testCompileClasspath.get()
+//			this@withType.classpath += project.configurations.testRuntimeClasspath.get()
+//			this@withType.classpath += transformedCommonTest
+//		}
 	}
 	
 	

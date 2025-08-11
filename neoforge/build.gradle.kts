@@ -3,7 +3,6 @@ import btpos.gradle.architectury.transformerplugin.attributes.ModuleType
 
 plugins {
 	id("com.github.johnrengelman.shadow")
-	id("com.dorongold.task-tree") version "4.0.1"
 }
 
 architectury {

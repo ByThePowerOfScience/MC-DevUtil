@@ -1,7 +1,6 @@
-package btpos.gradle.architectury.transformerplugin.transformers.forge
+package btpos.mcmods.devutil.gradle.plugin.transformers.forge
 
-import btpos.gradle.architectury.transformerplugin.ClassNode
-import btpos.gradle.architectury.transformerplugin.ClassVisitor2
+import btpos.mcmods.devutil.gradle.plugin.transformers.ClassNode
 
 private const val ITF_NAME = "btpos/mcmods/devutil/multiplatform/api/IPlatformConnectRedstone"
 
@@ -13,6 +12,7 @@ fun TConnectRedstoneForge(node: ClassNode) {
 	node.interfaces = node.interfaces.filter { it != ITF_NAME }
 }
 
+/*
 class TConnectRedstoneForge : ClassVisitor2() {
 	override fun visit(version: Int, access: Int, name: String?, signature: String?, superName: String?, interfaces: Array<out String?>?) {
 		if (interfaces == null || ITF_NAME !in interfaces)
@@ -22,4 +22,4 @@ class TConnectRedstoneForge : ClassVisitor2() {
 		
 		return super.visit(version, access, name, signature, superName, newInterfaces)
 	}
-}
+}*/

@@ -1,9 +1,7 @@
-package btpos.gradle.architectury.transformerplugin.transformers.testing
+package btpos.mcmods.devutil.gradle.plugin.transformers.testing
 
-import btpos.gradle.architectury.transformerplugin.ClassNode
-import btpos.gradle.architectury.transformerplugin.ClassVisitor2
-import btpos.gradle.architectury.transformerplugin.Type
-import org.objectweb.asm.AnnotationVisitor
+import btpos.mcmods.devutil.gradle.plugin.transformers.ClassNode
+import btpos.mcmods.devutil.gradle.plugin.transformers.Type
 
 private const val EXTENDWITH_DESC = "Lorg/junit/jupiter/api/extension/ExtendWith;"
 
@@ -63,6 +61,7 @@ private fun JUnitReplaceAgnostic(node: ClassNode, replaceWith: String) {
 	}
 }
 
+/*
 fun JUnitExtendWithNeo(): ClassVisitor2 {
 	return TExtendWith(NEO_TESTRUNNER_EXTENSION_DESC)
 }
@@ -95,4 +94,4 @@ private class ReplaceExtensionTargetClassLiteral(api: Int, delegate: AnnotationV
 			return super.visit(name, replaceWith)
 		}
 	}
-}
+}*/

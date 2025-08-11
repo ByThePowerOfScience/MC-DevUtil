@@ -1,13 +1,10 @@
-import btpos.gradle.architectury.transformerplugin.MultiplatformPreTransformer_Fabric
-import btpos.gradle.architectury.transformerplugin.MultiplatformPreTransformer_Forge
 import btpos.gradle.architectury.transformerplugin.attributes.ModuleType
 import btpos.gradle.architectury.transformerplugin.attributes.PlatformType
 
 plugins {
 	id("common-platform-transformer")
+	id("btpos.devutil-transformer")
 }
-
-apply(plugin="common-platform-transformer")
 
 val testJar = tasks.register("testJar", Jar::class) {
 	group = "build"
@@ -30,17 +27,16 @@ architectury {
 	common(PlatformType.FABRIC, PlatformType.NEOFORGE)
 }
 
-devTransformers {
-	platforms.putAll(mapOf(
-			objects.named<PlatformType>(PlatformType.FABRIC) to listOf(MultiplatformPreTransformer_Fabric()),
-			objects.named<PlatformType>(PlatformType.NEOFORGE) to listOf(MultiplatformPreTransformer_Forge())
-	))
-	
-	tasks.putAll(mapOf(
-			project.tasks.jar to objects.named<ModuleType>(ModuleType.MAIN),
-			testJar to objects.named<ModuleType>(ModuleType.TEST)
-	))
-}
+//devTransformers {
+//	platforms.putAll(mapOf(
+//			project.objects.named(PlatformType::class.java, PlatformType.FABRIC) to listOf(),
+//			project.objects.named(PlatformType::class.java, PlatformType.NEOFORGE) to listOf()
+//	))
+//	tasks.putAll(mapOf(
+//			project.tasks.jar.get() to objects.named<ModuleType>(ModuleType.MAIN),
+//			testJar.get() to objects.named<ModuleType>(ModuleType.TEST)
+//	))
+//}
 
 
 tasks.withType<Test> {
