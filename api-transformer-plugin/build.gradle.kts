@@ -17,7 +17,8 @@ repositories {
 }
 
 dependencies {
-	implementation("btpos.gradle.architectury:basetransformerplugin:1.0")
+	implementation("btpos.gradle.architecturyextended.platform:btpos.gradle.architecturyextended.platform.gradle.plugin:1.0.0-SNAPSHOT")
+	implementation("btpos.gradle.architecturyextended:architectury-extended-base:1.0.0-SNAPSHOT")
 	implementation("dev.architectury:architectury-transformer:5.2.87")
 }
 

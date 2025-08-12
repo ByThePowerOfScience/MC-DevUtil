@@ -4,6 +4,7 @@ pluginManagement {
 		maven(url="https://maven.architectury.dev/")
 		maven(url="https://files.minecraftforge.net/maven/")
 		gradlePluginPortal()
+		mavenLocal()
 	}
 }
 
@@ -11,5 +12,4 @@ pluginManagement {
 rootProject.name = "devutil"
 
 include("common", "fabric", "neoforge")
-includeBuild("basetransformerplugin")
 includeBuild("api-transformer-plugin")

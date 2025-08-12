@@ -1,7 +1,7 @@
 
-import btpos.gradle.architectury.transformerplugin.attributes.ModuleType
-import btpos.gradle.architectury.transformerplugin.attributes.ObfType
-import btpos.gradle.architectury.transformerplugin.attributes.PlatformType
+//import btpos.gradle.architectury.architecturyextensions.attributes.ModuleType
+//import btpos.gradle.architectury.architecturyextensions.attributes.ObfType
+//import btpos.gradle.architectury.architecturyextensions.attributes.PlatformType
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
@@ -9,7 +9,6 @@ plugins {
 	id("dev.architectury.loom") version "1.10-SNAPSHOT" apply false
 	id("architectury-plugin") version "3.4-SNAPSHOT"
 	id("com.github.johnrengelman.shadow") version "8.1.1" apply false
-	id("common-platform-transformer") apply false
 	kotlin("jvm") version "2.1.21"
 	`maven-publish`
 }
@@ -20,20 +19,6 @@ val Project.loom: net.fabricmc.loom.api.LoomGradleExtensionAPI
 fun Project.prop(name: String): String {
 	return this.properties[name] as String
 }
-
-configurations {
-	create("common-main-deobf") {
-		attributes {
-		
-		}
-	}
-}
-
-//artifacts {
-//	add("common-main-dev", tasks.getByPath(":common:jar"))
-//	add("common-main-prod", tasks.getByPath(":common:build"))
-//	add("neoforge-main-deobf", tasks.getByPath(":neoforge:jar"))
-//}
 
 architectury {
 	minecraft = project.prop("minecraft_version")
@@ -51,9 +36,6 @@ subprojects {
 	apply(plugin = "dev.architectury.loom")
 	apply(plugin = "architectury-plugin")
 	apply(plugin = "maven-publish")
-	
-//	if (project.name != "common")
-//		apply(plugin = "dungeondesigner-preprocessor")
 	
 	base {
 		// Set up a suffixed format for the mod jar names, e.g. `example-fabric`.
@@ -115,7 +97,7 @@ subprojects {
 		}
 	}
 }
-
+/*
 //region Variants, Outputs, and Publishing
 fun makeOutputsForPlatform(platformName: String): Triple<Configuration, Configuration, Configuration> {
 	fun AttributeContainer.forAllOutgoing() {
@@ -161,7 +143,7 @@ fun makeOutputsForPlatform(platformName: String): Triple<Configuration, Configur
 		}
 		
 		outgoing {
-			capability("$group:$name-$platformName:$version")
+			capability("$group:${project.name}-$platformName:$version")
 		}
 	}
 	
@@ -177,7 +159,7 @@ fun makeOutputsForPlatform(platformName: String): Triple<Configuration, Configur
 		}
 		
 		outgoing {
-			capability("$group:$name-$platformName:$version")
+			capability("$group:${project.name}-$platformName:$version")
 		}
 	}
 	
@@ -190,7 +172,8 @@ fun makeOutputsForPlatform(platformName: String): Triple<Configuration, Configur
 	
 	return Triple(sources, dev_runtime, prod_runtime)
 }
-
+// TODO move this source-dev-prod to platform-specific convention plugins, because :rootProject:publishToMavenLocal will do all subprojects too
+//     meaning we don't have to handle ALL of them in the root buildscript
 val (neoforge_source, neoforge_dev, neoforge_prod) = makeOutputsForPlatform(PlatformType.NEOFORGE)
 val (fabric_source, fabric_dev, fabric_prod) = makeOutputsForPlatform(PlatformType.FABRIC)
 
@@ -218,6 +201,14 @@ artifacts {
 	listOf(neoforge_dev, fabric_dev, neoforge_prod, fabric_prod).forEach {
 		addVariantsFromConfiguration(it) {
 			mapToMavenScope("runtime")
+		}
+	}
+}*/
+
+publishing {
+	publications {
+		create<MavenPublication>("mavenJava") {
+			from(components["java"])
 		}
 	}
 }

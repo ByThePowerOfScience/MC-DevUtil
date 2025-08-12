@@ -1,9 +1,9 @@
-import btpos.gradle.architectury.transformerplugin.attributes.ModuleType
-import btpos.gradle.architectury.transformerplugin.attributes.PlatformType
+//import btpos.gradle.architectury.transformerplugin.attributes.ModuleType
+//import btpos.gradle.architectury.transformerplugin.attributes.PlatformType
 
 plugins {
-	id("common-platform-transformer")
-	id("btpos.devutil-transformer")
+//	id("btpos.gradle.architecturyextended.common")
+//	id("btpos.devutil-transformer")
 }
 
 val testJar = tasks.register("testJar", Jar::class) {
@@ -15,14 +15,14 @@ val testJar = tasks.register("testJar", Jar::class) {
 }
 
 architectury {
-	common(PlatformType.FABRIC, PlatformType.NEOFORGE)
+//	common(PlatformType.FABRIC, PlatformType.NEOFORGE)
 }
 
-devTransformers {
-	tasks.putAll(mapOf(
-			testJar.get() to objects.named<ModuleType>(ModuleType.TEST)
-	))
-}
+//devTransformers {
+//	tasks.putAll(mapOf(
+//			testJar.get() to objects.named<ModuleType>(ModuleType.TEST)
+//	))
+//}
 
 dependencies {
 	modImplementation("net.fabricmc:fabric-loader:${rootProject.properties["fabric_loader_version"]}")

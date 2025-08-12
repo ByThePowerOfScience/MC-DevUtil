@@ -1,8 +1,7 @@
-import btpos.gradle.architectury.transformerplugin.CommonPlatformTransformersPlugin
-import btpos.gradle.architectury.transformerplugin.attributes.ModuleType
 
 plugins {
 	id("com.github.johnrengelman.shadow")
+//	id("btpos.gradle.architecturyextended.platform")
 }
 
 architectury {
@@ -15,12 +14,6 @@ configurations {
 	val common by configurations.creating {
 		isCanBeResolved = true
 		isCanBeConsumed = false
-		
-		// this part is the only custom bit
-//		attributes {
-//			attribute(ArchAttributes.SOURCES_TYPE, "main")
-//			attribute(ArchAttributes.PLATFORM, "fabric")
-//		}
 	}
 	
 	
@@ -52,9 +45,9 @@ dependencies {
 		isTransitive = false
 	}
 	// run with the dev-transformed stuff
-	project(path=":common", configuration=CommonPlatformTransformersPlugin.getConfigNameForSourceTypeAndPlatform(ModuleType.MAIN, "fabric")).let {
-		"common"(it) { isTransitive = false }
-	}
+//	project(path=":common", configuration=CommonPlatformTransformersPlugin.getConfigNameForSourceTypeAndPlatform(ModuleType.MAIN, "fabric")).let {
+//		"common"(it) { isTransitive = false }
+//	}
 	
 	// shadow the prod stuff
 	"shadowBundle"(project(path= ":common", configuration= "transformProductionFabric"))
