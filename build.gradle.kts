@@ -9,6 +9,7 @@ plugins {
 	id("dev.architectury.loom") version "1.10-SNAPSHOT" apply false
 	id("architectury-plugin") version "3.4-SNAPSHOT"
 	id("com.github.johnrengelman.shadow") version "8.1.1" apply false
+	id("btpos.gradle.architecturyextended.transformersonly") version "1.0.0-SNAPSHOT" apply false
 	kotlin("jvm") version "2.1.21"
 	`maven-publish`
 }
@@ -205,11 +206,11 @@ artifacts {
 	}
 }*/
 
-publishing {
-	publications {
-		create<MavenPublication>("mavenJava") {
-			from(components["java"])
-		}
-	}
-}
+//publishing {
+//	publications {
+//		create<MavenPublication>("mavenJava") {
+//			from(components["java"])
+//		}
+//	}
+//}
 //endregion

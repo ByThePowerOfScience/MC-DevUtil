@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.At;
 // Only applied on Fabric
 @SuppressWarnings("UnusedMixin")
 @Mixin(RedStoneWireBlock.class)
-public class MConnectRedstone {
+public abstract class MConnectRedstone {
 	@WrapOperation(
 			method="getConnectingSide(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraft/core/Direction;Z)Lnet/minecraft/world/level/block/state/properties/RedstoneSide;",
 			at=@At(

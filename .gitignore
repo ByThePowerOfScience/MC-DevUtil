@@ -122,6 +122,6 @@ runs/
 
 gradlew*
 
-/common/src/generated/.cache/**
+/xplat/src/generated/.cache/**
 
 .kotlin/

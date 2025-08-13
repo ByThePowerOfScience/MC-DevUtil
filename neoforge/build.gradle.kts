@@ -1,7 +1,7 @@
+import btpos.gradle.architecturyextended.transformersonly.ArchCustomTransformers
 
 plugins {
 	id("com.github.johnrengelman.shadow")
-//	id("btpos.gradle.architecturyextended.platform")
 }
 
 architectury {
@@ -9,11 +9,14 @@ architectury {
 	neoForge()
 }
 
+inline fun <reified T : Named> String.named() = objects.named<T>(this)
+
 configurations {
-	val common by configurations.creating {
+	val common by creating {
 		isCanBeResolved = true
 		isCanBeConsumed = false
 	}
+ 
 	compileClasspath.get().extendsFrom(common)
 	runtimeClasspath.get().extendsFrom(common)
 	getByName("developmentNeoForge").extendsFrom(common)
@@ -37,6 +40,8 @@ repositories {
 	}
 }
 
+
+
 dependencies {
 	neoForge("net.neoforged:neoforge:${rootProject.properties["neoforge_version"]}")
 	
@@ -46,17 +51,20 @@ dependencies {
 	
 	testImplementation("net.neoforged:testframework:${rootProject.properties["neoforge_version"]}")
 	
-	// compile against the live stuff
+	// compile against the source stuff
 	compileOnly(project(path=":common", configuration="namedElements")) {
 		isTransitive = false
 	}
 	// run with the dev-transformed stuff
-//	project(path=":common", configuration=CommonPlatformTransformersPlugin.getConfigNameForSourceTypeAndPlatform(ModuleType.MAIN, "neoforge")).let {
-//		"common"(it) { isTransitive = false }
-//	}
+	"common"(project(path=":common", configuration=ArchCustomTransformers.getDevConfigName("neoforge"))) {
+		isTransitive = false
+	}
+	
 	// shadow the prod stuff
-	"shadowBundle"(project(path= ":common", configuration= "transformProductionNeoForge"))
+	"shadowBundle"(project(path=":common", configuration="transformProductionNeoForge"))
 }
+
+
 
 tasks.processResources {
 	val replaceMap = mapOf(
@@ -90,5 +98,5 @@ tasks.shadowJar {
 }
 
 tasks.remapJar {
-	input.set(tasks.shadowJar.get().archiveFile)
+	inputFile.set(tasks.shadowJar.get().archiveFile)
 }

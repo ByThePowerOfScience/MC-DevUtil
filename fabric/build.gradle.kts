@@ -1,12 +1,17 @@
+import btpos.gradle.architecturyextended.transformersonly.ArchCustomTransformers
 
 plugins {
 	id("com.github.johnrengelman.shadow")
-//	id("btpos.gradle.architecturyextended.platform")
+//	id("btpos.gradle.architecturyextended.platform") version "1.0.0-SNAPSHOT"
 }
 
 architectury {
 	platformSetupLoomIde()
 	fabric()
+	
+//	platformExt {
+//		platform.set(objects.named<MCPlatform>(MCPlatform.FABRIC))
+//	}
 }
 
 // the below is straight from the template
@@ -40,14 +45,14 @@ dependencies {
 	// This was originally in the template as `common(project(path=":common", configuration="namedElements"))`,
 	// but I needed my own transformers to exist in the dev runs, so I changed it to variant-aware.
 	
-	// compile against the live stuff
+	// compile against the source stuff
 	compileOnly(project(path=":common", configuration="namedElements")) {
 		isTransitive = false
 	}
 	// run with the dev-transformed stuff
-//	project(path=":common", configuration=CommonPlatformTransformersPlugin.getConfigNameForSourceTypeAndPlatform(ModuleType.MAIN, "fabric")).let {
-//		"common"(it) { isTransitive = false }
-//	}
+	"common"(project(path=":common", configuration=ArchCustomTransformers.getDevConfigName("fabric"))) {
+		isTransitive = false
+	}
 	
 	// shadow the prod stuff
 	"shadowBundle"(project(path= ":common", configuration= "transformProductionFabric"))
@@ -73,5 +78,5 @@ tasks.shadowJar {
 }
 
 tasks.remapJar {
-	input.set (tasks.shadowJar.get().archiveFile)
+	inputFile.set (tasks.shadowJar.get().archiveFile)
 }

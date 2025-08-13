@@ -17,8 +17,9 @@ repositories {
 }
 
 dependencies {
-	implementation("btpos.gradle.architecturyextended.platform:btpos.gradle.architecturyextended.platform.gradle.plugin:1.0.0-SNAPSHOT")
-	implementation("btpos.gradle.architecturyextended:architectury-extended-base:1.0.0-SNAPSHOT")
+	implementation("architectury-plugin:architectury-plugin.gradle.plugin:3.4-SNAPSHOT")
+	implementation("dev.architectury.loom:dev.architectury.loom.gradle.plugin:1.10-SNAPSHOT")
+	implementation("btpos.gradle.architecturyextended.transformersonly:btpos.gradle.architecturyextended.transformersonly.gradle.plugin:1.0.0-SNAPSHOT")
 	implementation("dev.architectury:architectury-transformer:5.2.87")
 }
 
