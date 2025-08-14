@@ -1,15 +1,16 @@
-
-//import btpos.gradle.architectury.architecturyextensions.attributes.ModuleType
-//import btpos.gradle.architectury.architecturyextensions.attributes.ObfType
-//import btpos.gradle.architectury.architecturyextensions.attributes.PlatformType
+import btpos.gradle.architecturyextended.base.util.standardJavaArchiveAttributes
+import org.gradle.kotlin.dsl.named
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import btpos.gradle.architecturyextended.base.attributes.*
 
 plugins {
 	id("dev.architectury.loom") version "1.10-SNAPSHOT" apply false
 	id("architectury-plugin") version "3.4-SNAPSHOT"
 	id("com.github.johnrengelman.shadow") version "8.1.1" apply false
-	id("btpos.gradle.architecturyextended.transformersonly") version "1.0.0-SNAPSHOT" apply false
+	id("btpos.gradle.architecturyextended.base") version "1.0.0-SNAPSHOT"
+	id("btpos.gradle.architecturyextended.common") version "1.0.0-SNAPSHOT" apply false
+	id("btpos.gradle.architecturyextended.platform") version "1.0.0-SNAPSHOT" apply false
 	kotlin("jvm") version "2.1.21"
 	`maven-publish`
 }
@@ -37,6 +38,7 @@ subprojects {
 	apply(plugin = "dev.architectury.loom")
 	apply(plugin = "architectury-plugin")
 	apply(plugin = "maven-publish")
+	apply(plugin = "btpos.gradle.architecturyextended.base")
 	
 	base {
 		// Set up a suffixed format for the mod jar names, e.g. `example-fabric`.
@@ -98,119 +100,3 @@ subprojects {
 		}
 	}
 }
-/*
-//region Variants, Outputs, and Publishing
-fun makeOutputsForPlatform(platformName: String): Triple<Configuration, Configuration, Configuration> {
-	fun AttributeContainer.forAllOutgoing() {
-		attribute(ModuleType.ATTRIBUTE, objects.named(ModuleType.MAIN))
-		attribute(LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE, objects.named(LibraryElements.JAR))
-	}
-	
-	fun AttributeContainer.sources() {
-		attribute(ObfType.ATTRIBUTE, objects.named(ObfType.DEOBF))
-		attribute(Usage.USAGE_ATTRIBUTE, objects.named(Usage.JAVA_API))
-		forAllOutgoing()
-	}
-	
-	fun AttributeContainer.runtime(isObf: Boolean) {
-		val attr = if (isObf) ObfType.OBF else ObfType.DEOBF
-		attribute(ObfType.ATTRIBUTE, objects.named(attr))
-		attribute(Usage.USAGE_ATTRIBUTE, objects.named(Usage.JAVA_RUNTIME))
-		forAllOutgoing()
-	}
-	
-	// Solely the sources for the platform-specific project
-	val sources = configurations.create("${platformName}_source").apply {
-		isCanBeConsumed = true
-		isCanBeResolved = false
-		
-		description = "Solely the sources for this platform's platform-specific code, without any common stuff included."
-		
-		attributes {
-			attribute(PlatformType.ATTRIBUTE, objects.named(platformName))
-			sources()
-		}
-	}
-	
-	val dev_runtime = configurations.create("${platformName}_dev").apply {
-		isCanBeConsumed = true
-		isCanBeResolved = false
-		
-		description = "The compiled and transformed platform-specific code for use in dev runs, still without the common module shaded."
-		
-		attributes {
-			attribute(PlatformType.ATTRIBUTE, objects.named(platformName))
-			runtime(false)
-		}
-		
-		outgoing {
-			capability("$group:${project.name}-$platformName:$version")
-		}
-	}
-	
-	val prod_runtime = configurations.create("${platformName}_prod").apply {
-		isCanBeConsumed = true
-		isCanBeResolved = false
-		
-		description = "The obfuscated production variant, with all code merged, transformed, and mapped for client use."
-		
-		attributes {
-			attribute(PlatformType.ATTRIBUTE, objects.named(platformName))
-			runtime(true)
-		}
-		
-		outgoing {
-			capability("$group:${project.name}-$platformName:$version")
-		}
-	}
-	
-	artifacts {
-		val proj = project(":$platformName")
-		add(sources.name, proj.tasks["sourcesJar"])
-		add(dev_runtime.name, proj.tasks.jar)
-		add(prod_runtime.name, tasks.getByPath(":$platformName:shadowJar"))
-	}
-	
-	return Triple(sources, dev_runtime, prod_runtime)
-}
-// TODO move this source-dev-prod to platform-specific convention plugins, because :rootProject:publishToMavenLocal will do all subprojects too
-//     meaning we don't have to handle ALL of them in the root buildscript
-val (neoforge_source, neoforge_dev, neoforge_prod) = makeOutputsForPlatform(PlatformType.NEOFORGE)
-val (fabric_source, fabric_dev, fabric_prod) = makeOutputsForPlatform(PlatformType.FABRIC)
-
-val common_sources by configurations.creating {
-	isCanBeConsumed = true
-	isCanBeResolved = false
-	
-	attributes {
-		attribute(ModuleType.ATTRIBUTE, objects.named(ModuleType.MAIN))
-		attribute(Usage.USAGE_ATTRIBUTE, objects.named(Usage.JAVA_API))
-		attribute(LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE, objects.named(LibraryElements.JAR))
-		attribute(DocsType.DOCS_TYPE_ATTRIBUTE, objects.named(DocsType.SOURCES))
-	}
-}
-
-artifacts {
-	add(common_sources.name, project(":common").tasks["sourcesJar"])
-}
-
-(components.findByName("java") as AdhocComponentWithVariants).run {
-	addVariantsFromConfiguration(common_sources) {
-		mapToMavenScope("compile")
-	}
-	
-	listOf(neoforge_dev, fabric_dev, neoforge_prod, fabric_prod).forEach {
-		addVariantsFromConfiguration(it) {
-			mapToMavenScope("runtime")
-		}
-	}
-}*/
-
-//publishing {
-//	publications {
-//		create<MavenPublication>("mavenJava") {
-//			from(components["java"])
-//		}
-//	}
-//}
-//endregion

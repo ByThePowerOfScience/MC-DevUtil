@@ -1,6 +1,6 @@
 package btpos.mcmods.devutil.gradle.plugin
 
-import btpos.gradle.architecturyextended.transformersonly.ArchCustomTransformers
+import btpos.gradle.architecturyextended.common.ArchCommonTransformerPlugin
 import btpos.mcmods.devutil.gradle.plugin.transformers.ITransformerProvider
 import btpos.mcmods.devutil.gradle.plugin.transformers.interfaces.TPlatformConnectRedstone
 import dev.architectury.plugin.ArchitectPluginExtension
@@ -13,22 +13,17 @@ import org.gradle.kotlin.dsl.getByType
 
 class APITransformerPlugin : Plugin<Project> {
 	override fun apply(project: Project) {
-		project.pluginManager.apply(ArchCustomTransformers::class.java)
+		project.pluginManager.apply(ArchCommonTransformerPlugin::class.java)
 		
-		val platformExt = (project.extensions.getByType<ArchitectPluginExtension>() as ExtensionAware)
-			.extensions.getByType<ArchCustomTransformers.Extension>()
-			
 		project.afterEvaluate {
+			val platformExt = (extensions.getByType<ArchitectPluginExtension>() as ExtensionAware)
+				.extensions.getByType<ArchCommonTransformerPlugin.Extension>()
+			
 			addPlatformTransformers(platformExt)
 		}
 	}
-	/**
-	 * With Gradle's lazy initialization, do this:
-	 * ```kotlin
-	 * platformExt.transformers.addAll(listOf(ourTransformerProviders).flatMap(ITransformerProvider::getTransformersForPlatform))
-	 * ```
-	 */
-	fun Project.addPlatformTransformers(tfExt: ArchCustomTransformers.Extension) {
+	
+	fun Project.addPlatformTransformers(tfExt: ArchCommonTransformerPlugin.Extension) {
 		val ourTransformers = listOf(
 				TPlatformConnectRedstone
 		)
@@ -43,16 +38,15 @@ class APITransformerPlugin : Plugin<Project> {
 			return ourTransformers.flatMap(getter)
 		}
 		
-		val tfPlatOld = tfExt.transformersByPlatform.get()
-		tfExt.transformersByPlatform.set(tfExt.platforms.get().let { l ->
-			tfPlatOld.let { oldMap ->
-				val newMap = oldMap.toMutableMap()
-				l.forEach { platformName ->
-					newMap.computeIfAbsent(platformName, { mutableListOf() }).addAll(getOurTransformersForPlatform(platformName))
-				}
-				newMap
-			}
-		})
+		tfExt.transformersByPlatform
+			.maybeCreate("neoforge")
+			.transformers
+			.addAll(getOurTransformersForPlatform("neoforge"))
+		
+		tfExt.transformersByPlatform
+			.maybeCreate("fabric")
+			.transformers
+			.addAll(getOurTransformersForPlatform("fabric"))
 	}
 }
 

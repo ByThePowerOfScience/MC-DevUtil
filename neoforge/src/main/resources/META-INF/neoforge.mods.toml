@@ -4,7 +4,7 @@ loaderVersion = "[5,)"
 license = "MIT"
 
 [[mods]]
-    modId = "${mod_id}"
+    modId = "btpos-devutil"
     version = "${version}"
     displayName = "${mod_name}"
     authors = ""
@@ -13,21 +13,21 @@ ${mod_desc}
 '''
 #logoFile = ""
 
-[[dependencies.${mod_id}]]
+[[dependencies.btpos-devutil]]
     modId = "neoforge"
     type = "required"
     versionRange = "[21,)"
     ordering = "NONE"
     side = "BOTH"
 
-[[dependencies.${mod_id}]]
+[[dependencies.btpos-devutil]]
     modId = "minecraft"
     type = "required"
     versionRange = "[1.21.8,)"
     ordering = "NONE"
     side = "BOTH"
 
-[[dependencies.${mod_id}]]
+[[dependencies.btpos-devutil]]
     modId = "architectury"
     type = "required"
     versionRange = "[17.0.8,)"
@@ -35,4 +35,4 @@ ${mod_desc}
     side = "BOTH"
 
 [[mixins]]
-    config = "${mod_id}.mixins.json"
+    config = "btpos-devutil.mixins.json"

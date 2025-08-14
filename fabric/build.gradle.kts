@@ -1,17 +1,16 @@
-import btpos.gradle.architecturyextended.transformersonly.ArchCustomTransformers
+import btpos.gradle.architecturyextended.common.ArchCommonTransformerPlugin
 
 plugins {
 	id("com.github.johnrengelman.shadow")
-//	id("btpos.gradle.architecturyextended.platform") version "1.0.0-SNAPSHOT"
+	id("btpos.gradle.architecturyextended.platform")
 }
 
 architectury {
 	platformSetupLoomIde()
 	fabric()
-	
-//	platformExt {
-//		platform.set(objects.named<MCPlatform>(MCPlatform.FABRIC))
-//	}
+}
+archExt {
+	platform = "fabric"
 }
 
 // the below is straight from the template
@@ -50,7 +49,7 @@ dependencies {
 		isTransitive = false
 	}
 	// run with the dev-transformed stuff
-	"common"(project(path=":common", configuration=ArchCustomTransformers.getDevConfigName("fabric"))) {
+	"common"(project(path=":common", configuration=ArchCommonTransformerPlugin.getDevConfigName("fabric"))) {
 		isTransitive = false
 	}
 	

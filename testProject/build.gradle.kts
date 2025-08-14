@@ -69,6 +69,8 @@ subprojects {
 			parchment("org.parchmentmc.data:parchment-1.21.8:2025.07.20@zip")
 		})
 		
+		compileOnly("btpos.mcmods.devutil:devutil:1.0.0-SNAPSHOT")
+		
 		implementation(rootProject.libs.kotlin.reflect)
 		
 		testImplementation(kotlin("test"))
@@ -98,3 +100,119 @@ subprojects {
 		}
 	}
 }
+/*
+//region Variants, Outputs, and Publishing
+fun makeOutputsForPlatform(platformName: String): Triple<Configuration, Configuration, Configuration> {
+	fun AttributeContainer.forAllOutgoing() {
+		attribute(ModuleType.ATTRIBUTE, objects.named(ModuleType.MAIN))
+		attribute(LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE, objects.named(LibraryElements.JAR))
+	}
+	
+	fun AttributeContainer.sources() {
+		attribute(ObfType.ATTRIBUTE, objects.named(ObfType.DEOBF))
+		attribute(Usage.USAGE_ATTRIBUTE, objects.named(Usage.JAVA_API))
+		forAllOutgoing()
+	}
+	
+	fun AttributeContainer.runtime(isObf: Boolean) {
+		val attr = if (isObf) ObfType.OBF else ObfType.DEOBF
+		attribute(ObfType.ATTRIBUTE, objects.named(attr))
+		attribute(Usage.USAGE_ATTRIBUTE, objects.named(Usage.JAVA_RUNTIME))
+		forAllOutgoing()
+	}
+	
+	// Solely the sources for the platform-specific project
+	val sources = configurations.create("${platformName}_source").apply {
+		isCanBeConsumed = true
+		isCanBeResolved = false
+		
+		description = "Solely the sources for this platform's platform-specific code, without any common stuff included."
+		
+		attributes {
+			attribute(PlatformType.ATTRIBUTE, objects.named(platformName))
+			sources()
+		}
+	}
+	
+	val dev_runtime = configurations.create("${platformName}_dev").apply {
+		isCanBeConsumed = true
+		isCanBeResolved = false
+		
+		description = "The compiled and transformed platform-specific code for use in dev runs, still without the common module shaded."
+		
+		attributes {
+			attribute(PlatformType.ATTRIBUTE, objects.named(platformName))
+			runtime(false)
+		}
+		
+		outgoing {
+			capability("$group:${project.name}-$platformName:$version")
+		}
+	}
+	
+	val prod_runtime = configurations.create("${platformName}_prod").apply {
+		isCanBeConsumed = true
+		isCanBeResolved = false
+		
+		description = "The obfuscated production variant, with all code merged, transformed, and mapped for client use."
+		
+		attributes {
+			attribute(PlatformType.ATTRIBUTE, objects.named(platformName))
+			runtime(true)
+		}
+		
+		outgoing {
+			capability("$group:${project.name}-$platformName:$version")
+		}
+	}
+	
+	artifacts {
+		val proj = project(":$platformName")
+		add(sources.name, proj.tasks["sourcesJar"])
+		add(dev_runtime.name, proj.tasks.jar)
+		add(prod_runtime.name, tasks.getByPath(":$platformName:shadowJar"))
+	}
+	
+	return Triple(sources, dev_runtime, prod_runtime)
+}
+// TODO move this source-dev-prod to platform-specific convention plugins, because :rootProject:publishToMavenLocal will do all subprojects too
+//     meaning we don't have to handle ALL of them in the root buildscript
+val (neoforge_source, neoforge_dev, neoforge_prod) = makeOutputsForPlatform(PlatformType.NEOFORGE)
+val (fabric_source, fabric_dev, fabric_prod) = makeOutputsForPlatform(PlatformType.FABRIC)
+
+val common_sources by configurations.creating {
+	isCanBeConsumed = true
+	isCanBeResolved = false
+	
+	attributes {
+		attribute(ModuleType.ATTRIBUTE, objects.named(ModuleType.MAIN))
+		attribute(Usage.USAGE_ATTRIBUTE, objects.named(Usage.JAVA_API))
+		attribute(LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE, objects.named(LibraryElements.JAR))
+		attribute(DocsType.DOCS_TYPE_ATTRIBUTE, objects.named(DocsType.SOURCES))
+	}
+}
+
+artifacts {
+	add(common_sources.name, project(":common").tasks["sourcesJar"])
+}
+
+(components.findByName("java") as AdhocComponentWithVariants).run {
+	addVariantsFromConfiguration(common_sources) {
+		mapToMavenScope("compile")
+	}
+	
+	listOf(neoforge_dev, fabric_dev, neoforge_prod, fabric_prod).forEach {
+		addVariantsFromConfiguration(it) {
+			mapToMavenScope("runtime")
+		}
+	}
+}*/
+
+//publishing {
+//	publications {
+//		create<MavenPublication>("mavenJava") {
+//			from(components["java"])
+//		}
+//	}
+//}
+//endregion

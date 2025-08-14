@@ -1,12 +1,16 @@
-import btpos.gradle.architecturyextended.transformersonly.ArchCustomTransformers
+import btpos.gradle.architecturyextended.common.ArchCommonTransformerPlugin
 
 plugins {
 	id("com.github.johnrengelman.shadow")
+	id("btpos.gradle.architecturyextended.platform")
 }
 
 architectury {
 	platformSetupLoomIde()
 	neoForge()
+}
+archExt {
+	platform = "neoforge"
 }
 
 inline fun <reified T : Named> String.named() = objects.named<T>(this)
@@ -56,7 +60,7 @@ dependencies {
 		isTransitive = false
 	}
 	// run with the dev-transformed stuff
-	"common"(project(path=":common", configuration=ArchCustomTransformers.getDevConfigName("neoforge"))) {
+	"common"(project(path=":common", configuration=ArchCommonTransformerPlugin.getDevConfigName("neoforge"))) {
 		isTransitive = false
 	}
 	

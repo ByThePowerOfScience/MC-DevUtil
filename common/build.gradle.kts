@@ -1,7 +1,6 @@
 
 plugins {
-//	id("btpos.gradle.architecturyextended.common") version "1.0.0-SNAPSHOT"
-	id("btpos.gradle.architecturyextended.transformersonly")
+	id("btpos.gradle.architecturyextended.common")
 }
 
 val testJar = tasks.register("testJar", Jar::class) {
