@@ -1,0 +1,5 @@
+[versions]
+    kotlin = "2.1.21"
+
+[libraries]
+    kotlin-reflect = { group="org.jetbrains.kotlin", name="kotlin-reflect", version.ref="kotlin" }
