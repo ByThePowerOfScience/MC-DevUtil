@@ -99,4 +99,17 @@ subprojects {
 			freeCompilerArgs.add("-Xcontext-receivers")
 		}
 	}
+	
+	publishing {
+		publications {
+			create<MavenPublication>("mavenJava") {
+				artifactId = if (project.name == "common") {
+					rootProject.name
+				} else {
+					"${rootProject.name}-${project.name}"
+				}
+				from(components["java"])
+			}
+		}
+	}
 }

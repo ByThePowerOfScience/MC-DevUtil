@@ -13,4 +13,4 @@ rootProject.name = "devutil"
 
 include("common", "fabric", "neoforge")
 includeBuild("api-transformer-plugin")
-//includeBuild("TestProject")
+includeBuild("TestProject")
