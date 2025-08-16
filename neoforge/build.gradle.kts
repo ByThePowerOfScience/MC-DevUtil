@@ -15,12 +15,12 @@ neoForge {
         accessTransformers.from(at.absolutePath)
     }
     parchment {
-        minecraftVersion = rootProject.prop("parchment_minecraft")
-        mappingsVersion = rootProject.prop("parchment_version")
+        minecraftVersion = prop("parchment_minecraft")
+        mappingsVersion = prop("parchment_version")
     }
     runs {
         configureEach {
-            systemProperty("neoforge.enabledGameTestNamespaces", rootProject.prop("mod_id"))
+            systemProperty("neoforge.enabledGameTestNamespaces", prop("mod_id"))
             ideName = "NeoForge ${name.capitalize()} (${project.path})" // Unify the run config names with fabric
         }
         create("client") {
@@ -38,6 +38,10 @@ neoForge {
             sourceSet(sourceSets.main.get())
         }
     }
+}
+
+dependencies {
+    "shadowBundle"(project(path=":common", configuration="runtimeElements-neoforge"))
 }
 
 sourceSets.main.get().resources { srcDir ("src/generated/resources") }

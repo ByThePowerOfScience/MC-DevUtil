@@ -3,5 +3,8 @@ plugins {
     id("fabric-loom") version "1.11-SNAPSHOT" apply false
     // see https://projects.neoforged.net/neoforged/moddevgradle for new versions
     id("net.neoforged.moddev") version "2.0.107" apply false
-    kotlin("jvm") version libs.versions.kotlin
+}
+
+repositories {
+    mavenCentral()
 }

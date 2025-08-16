@@ -1,10 +1,15 @@
 plugins {
     id("multiloader-common")
     id("net.neoforged.moddev")
+    id("btpos.gradle.multiloader.commontransformers")
 }
 
-inline fun Project.prop(name: String): String {
+fun Project.prop(name: String): String {
     return rootProject.property(name) as String
+}
+
+transformers {
+    platforms.addAll("neoforge", "fabric")
 }
 
 neoForge {
@@ -21,25 +26,11 @@ neoForge {
 }
 
 dependencies {
-    compileOnly(group = "org.spongepowered", name = "mixin", version = "0.8.5")
+    compileOnly("org.spongepowered:mixin:0.8.5")
+    compileOnly("org.ow2.asm:asm-tree:9.6") // because Mixin isn't giving any transitive deps fsr?
+    annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
     // fabric and neoforge both bundle mixinextras, so it is safe to use it in common
     compileOnly(group = "io.github.llamalad7", name = "mixinextras-common", version = "0.3.5")
     annotationProcessor(group = "io.github.llamalad7", name = "mixinextras-common", version = "0.3.5")
-}
-
-configurations {
-    create("commonJava") {
-        isCanBeResolved = false
-        isCanBeConsumed = true
-    }
-    create("commonResources") {
-        isCanBeResolved = false
-        isCanBeConsumed = true
-    }
-}
-
-artifacts {
-    add("commonJava", sourceSets.main.get().java.sourceDirectories.singleFile)
-    add("commonResources", sourceSets.main.get().resources.sourceDirectories.singleFile)
 }
 

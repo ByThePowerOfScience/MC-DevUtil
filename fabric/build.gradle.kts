@@ -17,6 +17,8 @@ dependencies {
     })
     modImplementation ("net.fabricmc:fabric-loader:${rootProject.prop("fabric_loader_version")}")
     modImplementation ("net.fabricmc.fabric-api:fabric-api:${rootProject.prop("fabric_version")}")
+    
+    "shadowBundle"(project(path=":common", configuration="runtimeElements-fabric"))
 }
 
 loom {
