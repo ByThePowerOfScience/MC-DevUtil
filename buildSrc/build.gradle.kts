@@ -16,6 +16,5 @@ dependencies {
     implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
     // val libs = the<LibrariesForLibs>()
     implementation(libs.kotlin.reflect.get())
-    implementation("com.github.johnrengelman.shadow:com.github.johnrengelman.shadow.gradle.plugin:8.1.1")
-    implementation("btpos.gradle.multiloader.commontransformers:btpos.gradle.multiloader.commontransformers.gradle.plugin:1.0-SNAPSHOT")
+    implementation("btpos.gradle.multiloader.platformtransformers:btpos.gradle.multiloader.platformtransformers.gradle.plugin:1.0-SNAPSHOT")
 }

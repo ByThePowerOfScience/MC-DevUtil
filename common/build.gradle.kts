@@ -1,15 +1,10 @@
 plugins {
     id("multiloader-common")
     id("net.neoforged.moddev")
-    id("btpos.gradle.multiloader.commontransformers")
 }
 
 fun Project.prop(name: String): String {
     return rootProject.property(name) as String
-}
-
-transformers {
-    platforms.addAll("neoforge", "fabric")
 }
 
 neoForge {

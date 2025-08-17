@@ -41,7 +41,6 @@ neoForge {
 }
 
 dependencies {
-    "shadowBundle"(project(path=":common", configuration="runtimeElements-neoforge"))
 }
 
 sourceSets.main.get().resources { srcDir ("src/generated/resources") }

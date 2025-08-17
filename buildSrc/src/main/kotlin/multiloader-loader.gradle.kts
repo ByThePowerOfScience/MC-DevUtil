@@ -1,8 +1,8 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import btpos.gradle.architecturyextended.base.tasks.ClassTransformTask
 
 plugins {
     id("multiloader-common")
-    id("com.github.johnrengelman.shadow")
+    id("btpos.gradle.multiloader.platformtransformers")
 }
 
 configurations {
@@ -10,9 +10,6 @@ configurations {
         isCanBeResolved = true
     }
     create("commonResources") {
-        isCanBeResolved = true
-    }
-    create("shadowBundle") {
         isCanBeResolved = true
     }
 }
@@ -26,27 +23,12 @@ dependencies {
         }
     }
 }
-tasks.processResources {
-    val common = project(":common").sourceSets.main.get()
-    dependsOn(common.resources)
-    from(common.resources)
+
+kotlin {
+    sourceSets {
+        main {
+            dependsOn(project(":common").kotlin.sourceSets.main.get())
+        }
+    }
 }
 
-tasks.named<Javadoc>("javadoc").configure {
-    val common = project(":common").sourceSets.main.get()
-    dependsOn(common.allSource)
-    source(common.allSource)
-}
-
-tasks.named<Jar>("sourcesJar") {
-    val common = project(":common").sourceSets.main.get()
-    dependsOn(common.allSource, common.resources)
-    from(common.allSource)
-    from(common.resources)
-    
-    duplicatesStrategy = DuplicatesStrategy.WARN
-}
-
-tasks.named<ShadowJar>("shadowJar") {
-    configurations.add(project.configurations["shadowBundle"])
-}
