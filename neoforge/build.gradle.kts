@@ -40,7 +40,15 @@ neoForge {
     }
 }
 
+repositories {
+    maven {
+        name = "Kotlin for Forge"
+        url = uri("https://thedarkcolour.github.io/KotlinForForge/")
+    }
+}
+
 dependencies {
+    implementation("thedarkcolour:kotlinforforge-neoforge:5.9.0")
 }
 
 sourceSets.main.get().resources { srcDir ("src/generated/resources") }
