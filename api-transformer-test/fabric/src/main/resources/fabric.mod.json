@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "id": "${mod_id}",
+  "version": "${version}",
+  "name": "${mod_name}",
+  "description": "${mod_desc}",
+  "authors": [
+    "ByThePowerOfScience"
+  ],
+  "contact": {
+    "homepage": ""
+  },
+  "license": "MIT",
+  "icon": "",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      {
+        "adapter": "kotlin",
+        "value": "btpos.mcmods.devutil.fabric.FabricEntry"
+      }
+    ],
+    "client": [
+      {
+        "adapter": "kotlin",
+        "value": "btpos.mcmods.devutil.fabric.client.FabricClientEntry"
+      }
+    ]
+  },
+  "mixins": [
+    "${mod_id}.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.17.0",
+    "minecraft": "~1.21.8",
+    "java": ">=21",
+    "architectury": ">=17.0.8",
+    "fabric-api": "*",
+    "fabric-language-kotlin": ">=1.13.3+kotlin.2.1.21"
+  },
+  "suggests": {
+    "another-mod": "*"
+  }
+}

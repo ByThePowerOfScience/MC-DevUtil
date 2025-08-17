@@ -44,7 +44,8 @@ plugins {
 }
 
 // This should match the folder name of the project, or else IDEA may complain (see https://youtrack.jetbrains.com/issue/IDEA-317606)
-rootProject.name = "MultiloaderTest"
+rootProject.name = "DevUtilML"
 include("common")
 include("fabric")
 include("neoforge")
+includeBuild("api-transformer-plugin")
