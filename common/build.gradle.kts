@@ -21,11 +21,9 @@ neoForge {
 }
 
 dependencies {
-    compileOnly("org.spongepowered:mixin:0.8.5")
+    compileOnly("org.spongepowered:mixin:0.8.5") // don't run annotation processor on common, since it can't resolve remaps here
     compileOnly("org.ow2.asm:asm-tree:9.6") // because Mixin isn't giving any transitive deps fsr?
-    annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
     // fabric and neoforge both bundle mixinextras, so it is safe to use it in common
     compileOnly(group = "io.github.llamalad7", name = "mixinextras-common", version = "0.3.5")
-    annotationProcessor(group = "io.github.llamalad7", name = "mixinextras-common", version = "0.3.5")
 }
 

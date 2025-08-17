@@ -3,6 +3,7 @@ import btpos.gradle.architecturyextended.base.tasks.ClassTransformTask
 plugins {
     id("multiloader-common")
     id("btpos.gradle.multiloader.platformtransformers")
+    idea
 }
 
 configurations {
@@ -22,6 +23,11 @@ dependencies {
             requireCapability("$group:$mod_id")
         }
     }
+    
+    compileOnly("com.google.auto.service:auto-service-annotations:1.1.1")
+    annotationProcessor("com.google.auto.service:auto-service:1.1.1")
+    
+//    "commonSources"(project.project(":common").sourceSets.main.get().allSource)
 }
 
 kotlin {
@@ -32,3 +38,9 @@ kotlin {
     }
 }
 
+//idea {
+//    module {
+//        // Fix IntelliJ not seeing that we can access the common sources despite not declaring a dependency on it
+//        scopes["COMPILE"]!!["plus"]!!.add(configurations["commonSources"])
+//    }
+//}

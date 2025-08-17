@@ -29,7 +29,7 @@ base {
 java {
 	toolchain.languageVersion = JavaLanguageVersion.of(java_version.toInt())
 	withSourcesJar()
-	withJavadocJar()
+//	withJavadocJar() // kotlin project, uses kdoc not javadoc sadly
 }
 
 repositories {
@@ -67,13 +67,13 @@ repositories {
 
 // Declare capabilities on the outgoing configurations.
 // Read more about capabilities here: https://docs.gradle.org/current/userguide/component_capabilities.html#sec:declaring-additional-capabilities-for-a-local-component
-listOf("apiElements", "runtimeElements", "sourcesElements", "javadocElements").forEach { variant ->
-	configurations["$variant"].outgoing {
+listOf("apiElements", "sourcesElements", "javadocElements").forEach { variant ->
+	configurations.findByName("$variant")?.outgoing {
 		capability("$group:${project.name}:$version")
 		capability("$group:${base.archivesName.get()}:$version")
 		capability("$group:$mod_id-${project.name}-${minecraft_version}:$version")
 		capability("$group:$mod_id:$version")
-	}
+	} ?: return@forEach
 	publishing.publications.configureEach {
 		if (this is MavenPublication)
 			suppressPomMetadataWarningsFor(variant)
@@ -86,6 +86,11 @@ configurations.named { it.startsWith("runtimeElements") }.configureEach {
 		capability("$group:${base.archivesName.get()}:$version")
 		capability("$group:$mod_id-${project.name}-${minecraft_version}:$version")
 		capability("$group:$mod_id:$version")
+	}
+	val cfgname = this@configureEach.name
+	publishing.publications.configureEach {
+		if (this is MavenPublication)
+			suppressPomMetadataWarningsFor(cfgname)
 	}
 }
 

@@ -1,9 +1,12 @@
 package btpos.mcmods.devutil.neoforge.multiplatform.services
 
+import btpos.mcmods.devutil.multiplatform.services.IPlatformInfoService
+import com.google.auto.service.AutoService
 import net.neoforged.fml.ModList
 import net.neoforged.fml.loading.FMLLoader
 
-class PlatformInfoNeoforge : IPlatformHelper {
+@AutoService(IPlatformInfoService::class)
+class PlatformInfoNeoforge : IPlatformInfoService {
 	override val platformName: String
 		get() = "neoforge"
 	

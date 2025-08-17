@@ -3,6 +3,7 @@ package btpos.mcmods.devutil.fabric.services
 import btpos.mcmods.devutil.common.registry.RegistrySupplier
 import btpos.mcmods.devutil.multiplatform.services.IPlatformRegistry
 import btpos.mcmods.devutil.multiplatform.services.PlatformRegistryFactory
+import com.google.auto.service.AutoService
 import net.minecraft.core.Holder
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
@@ -10,6 +11,7 @@ import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import java.util.Optional
 
+@AutoService(PlatformRegistryFactory::class)
 class FabricRegistryFactory : PlatformRegistryFactory {
 	override fun <T> create(modId: String, registryKey: ResourceKey<Registry<T>>): IPlatformRegistry<T> {
 		@Suppress("UNCHECKED_CAST") // the typechecker is freaking out with this one fsr...
