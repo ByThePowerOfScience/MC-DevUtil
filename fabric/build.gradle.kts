@@ -17,7 +17,7 @@ dependencies {
     })
     modImplementation ("net.fabricmc:fabric-loader:${rootProject.prop("fabric_loader_version")}")
     modImplementation ("net.fabricmc.fabric-api:fabric-api:${rootProject.prop("fabric_version")}")
-    
+    modImplementation("net.fabricmc:fabric-language-kotlin:1.13.3+kotlin.2.1.21")
 }
 
 loom {

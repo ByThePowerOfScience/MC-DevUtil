@@ -1,6 +1,6 @@
 package btpos.mcmods.testproject
 
-const val MODID = "btpos-devutil"
+const val MODID = "btpos_devutil"
 
 object CommonEntry {
 	@JvmStatic
