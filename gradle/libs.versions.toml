@@ -1,6 +1,12 @@
 [versions]
     kotlin = "2.1.21"
-    ksp = "2.1.21-2.0.2"
+    junit = "5.7.1"
 
 [libraries]
     kotlin-reflect = { group="org.jetbrains.kotlin", name="kotlin-reflect", version.ref="kotlin" }
+    junit-jupiter = { module="org.junit.jupiter:junit-jupiter", version.ref="junit" }
+    junit-launcher = { module="org.junit.platform:junit-platform-launcher" }
+    hamcrest = { module="org.hamcrest:hamcrest", version = "3.0" }
+
+[bundles]
+    junit = ["junit-jupiter", "hamcrest"]

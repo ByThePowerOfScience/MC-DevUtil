@@ -1,5 +1,10 @@
 package btpos.mcmods.devutil.multiplatform.services
 
+/**
+ * Provides information about the current platform, and acts as a way to extract modloader-specific info.
+ *
+ * Has a different implementation on each modloader so we can retrieve info.
+ */
 interface IPlatformInfoService {
 	/**
 	 * Gets the name of the current platform, e.g. "neoforge", "fabric"

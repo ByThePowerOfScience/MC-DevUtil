@@ -7,6 +7,10 @@ fun Project.prop(name: String): String {
     return rootProject.property(name) as String
 }
 
+tasks.test {
+    useJUnitPlatform()
+}
+
 neoForge {
     version = prop("neoforge_version")
     // Automatically enable neoforge AccessTransformers if the file exists
@@ -22,6 +26,7 @@ neoForge {
         configureEach {
             systemProperty("neoforge.enabledGameTestNamespaces", prop("mod_id"))
             ideName = "NeoForge ${name.capitalize()} (${project.path})" // Unify the run config names with fabric
+            jvmArguments.addAll(listOf("-Dmixin.debug.export=true", "-Dmixin.debug.verbose=true", "-XX:+AllowEnhancedClassRedefinition"))
         }
         create("client") {
             client()
@@ -38,6 +43,10 @@ neoForge {
             sourceSet(sourceSets.main.get())
         }
     }
+    unitTest {
+        enable()
+        testedMod = mods[rootProject.prop("mod_id")]
+    }
 }
 
 repositories {
@@ -45,10 +54,18 @@ repositories {
         name = "Kotlin for Forge"
         url = uri("https://thedarkcolour.github.io/KotlinForForge/")
     }
+    mavenCentral()
+    maven {
+        name = "NeoForged"
+        url = uri("https://maven.neoforged.net/releases/")
+    }
 }
 
 dependencies {
     implementation("thedarkcolour:kotlinforforge-neoforge:5.9.0")
+	testImplementation("net.neoforged:testframework:${prop("neoforge_version")}")
+    testImplementation(libs.bundles.junit)
+    testRuntimeOnly(libs.junit.launcher)
 }
 
 sourceSets.main.get().resources { srcDir ("src/generated/resources") }

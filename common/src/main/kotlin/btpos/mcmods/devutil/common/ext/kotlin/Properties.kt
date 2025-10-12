@@ -9,6 +9,6 @@ import kotlin.reflect.jvm.isAccessible
  * todo: make a compiler plugin that circumvents the entire KProperty bull fucking shit and just inlines a direct access to the "delegate" object inside it
  */
 inline fun <reified T> KProperty0<*>.safeGetDelegate(): T? {
-    this.isAccessible = true // I hate this i hate this i hate this WHY IS THIS SO STUPID THE DELEGATE IS L I T E R A L L Y  I N  T H E  C L A S S ASDKAMDLKASMDLKMLK
+    this.isAccessible = true // I hate this i hate this i hate this WHY IS THIS SO STUPID THE DELEGATE IS L I T E R A L L Y  A N  O B J E C T  I N  T H E  C L A S S ASDKAMDLKASMDLKMLK
     return this.getDelegate() as? T
 }

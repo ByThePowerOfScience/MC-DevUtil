@@ -55,7 +55,9 @@ repositories {
 					url = uri("https://maven.neoforged.net/releases")
 				}
 		)
-		filter { includeGroup("org.parchmentmc.data") }
+		filter {
+			includeGroup("org.parchmentmc.data")
+		}
 	}
 	maven {
 		name = "BlameJared"

@@ -18,7 +18,7 @@ interface IOnChange {
     
     
     /**
-     * Property delegate that calls [::onChange] when the value has been set.
+     * Property delegate that calls [onChange] when the value has been set.
      */
     fun <T> notify(initialValue: T): ReadWriteProperty<Any?, T> {
         return object : ReadWriteProperty<Any?, T> {

@@ -11,7 +11,6 @@ import net.minecraft.network.chat.Style
 import net.minecraft.world.phys.Vec3
 
 object ChatUtils {
-	
 	fun Vec3i?.toComponent(): MutableComponent {
 		if (this == null) {
 			return Component.literal("[null]")

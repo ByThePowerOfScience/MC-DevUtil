@@ -1,12 +1,11 @@
 package btpos.mcmods.devutil.neoforge
 
-import btpos.mcmods.devutil.CommonEntry
-import btpos.mcmods.devutil.MODID
+import btpos.mcmods.devutil.DevUtilEntry
 import net.neoforged.fml.common.Mod
 
-@Mod(MODID)
+@Mod(DevUtilEntry.MODID)
 object NeoForgeEntry {
 	init {
-		CommonEntry.init()
+		DevUtilEntry.init()
 	}
 }

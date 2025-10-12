@@ -25,5 +25,6 @@ dependencies {
     compileOnly("org.ow2.asm:asm-tree:9.6") // because Mixin isn't giving any transitive deps fsr?
     // fabric and neoforge both bundle mixinextras, so it is safe to use it in common
     compileOnly(group = "io.github.llamalad7", name = "mixinextras-common", version = "0.3.5")
+    testCompileOnly(libs.bundles.junit)
 }
 

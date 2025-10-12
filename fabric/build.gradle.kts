@@ -18,6 +18,9 @@ dependencies {
     modImplementation ("net.fabricmc:fabric-loader:${rootProject.prop("fabric_loader_version")}")
     modImplementation ("net.fabricmc.fabric-api:fabric-api:${rootProject.prop("fabric_version")}")
     modImplementation("net.fabricmc:fabric-language-kotlin:1.13.3+kotlin.2.1.21")
+    testImplementation("net.fabricmc:fabric-loader-junit:${rootProject.prop("fabric_loader_version")}")
+    testImplementation(libs.bundles.junit)
+    testRuntimeOnly(libs.junit.launcher)
 }
 
 loom {
@@ -29,6 +32,9 @@ loom {
         defaultRefmapName.set("${rootProject.prop("mod_id")}.refmap.json")
     }
     runs {
+        configureEach {
+            vmArgs.addAll(listOf("-Dmixin.debug.export=true", "-Dmixin.debug.verbose=true", "-XX:+AllowEnhancedClassRedefinition"))
+        }
         maybeCreate("client").apply {
             client()
 	        configName = "Fabric Client"
@@ -42,4 +48,8 @@ loom {
             runDir("runs/server")
         }
     }
+}
+
+tasks.test {
+    useJUnitPlatform()
 }

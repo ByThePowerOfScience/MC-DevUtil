@@ -1,16 +1,16 @@
 package btpos.mcmods.devutil.multiplatform
 
 import btpos.mcmods.devutil.multiplatform.services.IPlatformInfoService
-import java.util.ServiceLoader
+import btpos.mcmods.devutil.multiplatform.services.ServiceUtil
 
 /**
- * Platform-specific information injected by services.
+ * Provides information about the current platform, like its name, whether a mod is loaded, etc.
  */
 object PlatformInfo : IPlatformInfoService {
 	/**
 	 * We use explicit delegation instead of `by` so IDEA will autocomplete the methods.
 	 */
-	private val service = ServiceLoader.load(IPlatformInfoService::class.java).findFirst().orElseThrow { IllegalStateException("Unable to resolve btpos.mcmods.devutil.multiplatform.services.IPlatformInfoService instance for current platform!") }
+	private val service = ServiceUtil.findFirst<IPlatformInfoService>("btpos\\.mcmods\\.devutil")
 	
 	override val platformName by service::platformName
 	
@@ -18,13 +18,11 @@ object PlatformInfo : IPlatformInfoService {
 	
 	override val isDevelopmentEnvironment by service::isDevelopmentEnvironment
 	
-	/**
-	 * Gets the name of the environment type as a string.
-	 *
-	 * @return The name of the environment type.
-	 */
 	override val environment by service::environment
 	
+	/**
+	 * Get the current modloader as an enum.
+	 */
 	val loader: Loader
 		get() = when (environment) {
 			"neoforge" -> Loader.NEOFORGE

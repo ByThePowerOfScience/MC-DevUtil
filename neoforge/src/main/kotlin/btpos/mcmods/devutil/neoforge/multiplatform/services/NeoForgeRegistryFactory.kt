@@ -1,16 +1,16 @@
 package btpos.mcmods.devutil.neoforge.multiplatform.services
 
+import btpos.mcmods.devutil.common.registry.DeferredRegistrar
 import btpos.mcmods.devutil.common.registry.RegistrySupplier
-import btpos.mcmods.devutil.multiplatform.services.IPlatformRegistry
 import btpos.mcmods.devutil.multiplatform.services.PlatformRegistryFactory
 import com.google.auto.service.AutoService
 import net.minecraft.core.Registry
 import net.minecraft.resources.ResourceKey
-import net.minecraft.resources.ResourceLocation
 import net.neoforged.bus.api.IEventBus
 import net.neoforged.neoforge.registries.DeferredHolder
 import net.neoforged.neoforge.registries.DeferredRegister
 import java.lang.ref.WeakReference
+import java.util.function.Supplier
 
 private val MOD_BUSES: MutableMap<String, WeakReference<IEventBus>> = mutableMapOf()
 
@@ -22,32 +22,39 @@ class NeoForgeRegistryFactory : PlatformRegistryFactory {
 		}
 	}
 	
-	override fun <T> create(modId: String, registryKey: ResourceKey<Registry<T>>): IPlatformRegistry<T> {
-		return NeoForgeRegistry(DeferredRegister.create<T>(registryKey, modId))
+	override fun <T> create(modId: String, registryKey: ResourceKey<Registry<T>>): DeferredRegistrar<T> {
+		return NeoForgeDeferredRegister(DeferredRegister.create<T>(registryKey, modId))
 	}
 }
 
-private class NeoForgeRegistry<T>(private val reg: DeferredRegister<T>) : IPlatformRegistry<T> {
+private class NeoForgeDeferredRegister<T>(private val reg: DeferredRegister<T>) : DeferredRegistrar<T> {
 	override val modId: String
 		get() = reg.namespace
 	
-	override val registryKey: ResourceKey<Registry<T>>
-		get() = reg.registryKey as ResourceKey<Registry<T>>
+	override val registryKey: ResourceKey<out Registry<T>>
+		get() = reg.registryKey
 	
-	override fun <R : T> register(id: String, supplier: () -> R): RegistrySupplier<R> {
-		return ForgeRegistrySupplier(reg.register(id, supplier))
+	
+	override fun <R : T> register(id: String, factory: () -> R): RegistrySupplier<R> {
+		return ForgeRegistrySupplier(reg.register(id, factory))
 	}
 	
-	override fun register() {
+	override fun registerSelf() {
 		val modBus = MOD_BUSES[modId]?.get()
 		requireNotNull(modBus) { "No Forge mod event bus found for mod id '$modId'" }
 		reg.register(modBus)
 	}
+	
+	override fun iterator(): Iterator<T> {
+		return reg.entries.stream().map(Supplier<out T>::get).iterator()
+	}
+	
+	private inner class ForgeRegistrySupplier<ITEM : T>(private val internal: DeferredHolder<*, ITEM>) : RegistrySupplier<ITEM> {
+		override val modId: String by this@NeoForgeDeferredRegister::modId
+		override val registry by reg::registryKey
+		override val registeredName by internal::registeredName
+		
+		override fun get() = internal.get()
+	}
 }
 
-class ForgeRegistrySupplier<T>(private val internal: DeferredHolder<*, T>) : RegistrySupplier<T> {
-	override val registeredName by internal::registeredName
-	override val id: ResourceLocation by internal::id
-	
-	override fun get() = internal.get()
-}
