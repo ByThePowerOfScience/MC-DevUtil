@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
 	`kotlin-dsl`
 	kotlin("jvm") version "2.1.21"
@@ -14,6 +16,17 @@ repositories {
 	maven(url="https://maven.fabricmc.net/")
 	maven(url="https://maven.architectury.dev/")
 	maven(url="https://files.minecraftforge.net/maven/")
+}
+
+java {
+	targetCompatibility = JavaVersion.VERSION_21
+	sourceCompatibility = JavaVersion.VERSION_21
+}
+
+kotlin {
+	compilerOptions {
+		jvmTarget.set(JvmTarget.JVM_21)
+	}
 }
 
 dependencies {

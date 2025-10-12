@@ -17,7 +17,7 @@ class MixinConfigPlugin : IMixinConfigPlugin {
 	override fun acceptTargets(myTargets: Set<String?>?, otherTargets: Set<String?>?) {}
 	
 	override fun getMixins(): List<String?>? {
-		if (!PlatformInfo.loader.isForgeLike) {
+		if (PlatformInfo.loader == PlatformInfo.Loader.FABRIC) {
 			return listOf("api.MConnectRedstone")
 		}
 		return null

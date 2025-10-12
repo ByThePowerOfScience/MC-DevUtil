@@ -18,7 +18,7 @@ configurations {
 val mod_id: String by rootProject.properties
 
 dependencies {
-    compileOnly(project(":common")) {
+    implementation(project(":common")) {
         capabilities {
             requireCapability("$group:$mod_id")
         }
@@ -32,8 +32,15 @@ dependencies {
 
 kotlin {
     sourceSets {
+        val common = project(":common")
         main {
-            dependsOn(project(":common").kotlin.sourceSets.main.get())
+            // TODO figure out how to get this to depend on the java sources too for mixins
+            dependsOn(common.kotlin.sourceSets.main.get())
+            resources.srcDir(common.sourceSets.main.get().resources)
+        }
+        test {
+            dependsOn(common.kotlin.sourceSets.test.get())
+            resources.srcDir(common.sourceSets.test.get().resources)
         }
     }
 }

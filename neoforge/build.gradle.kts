@@ -68,4 +68,6 @@ dependencies {
     testRuntimeOnly(libs.junit.launcher)
 }
 
-sourceSets.main.get().resources { srcDir ("src/generated/resources") }
+sourceSets.main.get().resources {
+    srcDir ("src/generated/resources")
+}

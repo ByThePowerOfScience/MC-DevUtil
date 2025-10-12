@@ -12,8 +12,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-// Only applied on Fabric
-@SuppressWarnings("UnusedMixin")
+/**
+ * Applied on Fabric only
+ */
+@SuppressWarnings("UnusedMixin") // Applied through IMixinConfigPlugin#getMixins
 @Mixin(RedStoneWireBlock.class)
 public abstract class MConnectRedstone {
 	@WrapOperation(
