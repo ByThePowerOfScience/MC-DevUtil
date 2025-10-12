@@ -2,8 +2,7 @@ package btpos.mcmods.devutil.neoforge.multiplatform.services
 
 import btpos.mcmods.devutil.common.registry.DeferredRegistrar
 import btpos.mcmods.devutil.common.registry.RegistrySupplier
-import btpos.mcmods.devutil.multiplatform.services.PlatformRegistryFactory
-import com.google.auto.service.AutoService
+import btpos.mcmods.devutil.multiplatform.services.IPlatformRegistryFactory
 import net.minecraft.core.Registry
 import net.minecraft.resources.ResourceKey
 import net.neoforged.bus.api.IEventBus
@@ -14,8 +13,7 @@ import java.util.function.Supplier
 
 private val MOD_BUSES: MutableMap<String, WeakReference<IEventBus>> = mutableMapOf()
 
-@AutoService(PlatformRegistryFactory::class)
-class NeoForgeRegistryFactory : PlatformRegistryFactory {
+class NeoForgeRegistryFactory : IPlatformRegistryFactory {
 	companion object {
 		fun registerModEventBus(modId: String, modBus: IEventBus) {
 			MOD_BUSES[modId] = WeakReference(modBus)

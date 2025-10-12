@@ -2,8 +2,7 @@ package btpos.mcmods.devutil.fabric.services
 
 import btpos.mcmods.devutil.common.registry.DeferredRegistrar
 import btpos.mcmods.devutil.common.registry.RegistrySupplier
-import btpos.mcmods.devutil.multiplatform.services.PlatformRegistryFactory
-import com.google.auto.service.AutoService
+import btpos.mcmods.devutil.multiplatform.services.IPlatformRegistryFactory
 import net.minecraft.core.Holder
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
@@ -12,8 +11,7 @@ import net.minecraft.resources.ResourceLocation
 import java.util.Optional
 import java.util.function.Supplier
 
-@AutoService(PlatformRegistryFactory::class)
-class FabricRegistryFactory : PlatformRegistryFactory {
+class FabricRegistryFactory : IPlatformRegistryFactory {
 	override fun <T> create(modId: String, registryKey: ResourceKey<Registry<T>>): DeferredRegistrar<T> {
 		@Suppress("UNCHECKED_CAST") // the typechecker is freaking out with this one fsr...
 		return FabricDeferredRegistrar(modId, registryKey as ResourceKey<Registry<Any>>) as FabricDeferredRegistrar<T>
@@ -21,8 +19,6 @@ class FabricRegistryFactory : PlatformRegistryFactory {
 }
 
 private class FabricDeferredRegistrar<T : Any>(override val modId: String, override val registryKey: ResourceKey<Registry<T>>) : DeferredRegistrar<T> {
-	
-	
 	@Suppress("NOTHING_TO_INLINE")
 	inline fun <T> Registry<T>.gett(key: ResourceKey<T>): Optional<Holder.Reference<T>> {
 		return this.get(key)

@@ -10,7 +10,7 @@ object PlatformInfo : IPlatformInfoService {
 	/**
 	 * We use explicit delegation instead of `by` so IDEA will autocomplete the methods.
 	 */
-	private val service = ServiceUtil.findFirst<IPlatformInfoService>("btpos\\.mcmods\\.devutil")
+	private val service = ServiceUtil.findFirst<IPlatformInfoService>()
 	
 	override val platformName by service::platformName
 	

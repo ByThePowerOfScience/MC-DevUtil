@@ -5,7 +5,6 @@ import com.google.auto.service.AutoService
 import net.neoforged.fml.ModList
 import net.neoforged.fml.loading.FMLLoader
 
-@AutoService(IPlatformInfoService::class)
 class PlatformInfoNeoforge : IPlatformInfoService {
 	override val platformName: String
 		get() = "neoforge"

@@ -4,7 +4,6 @@ import btpos.mcmods.devutil.multiplatform.services.IPlatformInfoService
 import com.google.auto.service.AutoService
 import net.fabricmc.loader.api.FabricLoader
 
-@AutoService(IPlatformInfoService::class)
 class PlatformInfoFabric : IPlatformInfoService {
 	override val platformName: String
 		get() = "fabric"

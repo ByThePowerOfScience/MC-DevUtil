@@ -1,7 +1,7 @@
 package btpos.mcmods.devutil.common.registry
 
 import btpos.mcmods.devutil.common.registry.DeferredRegistrar.Companion.create
-import btpos.mcmods.devutil.multiplatform.services.PlatformRegistryFactory
+import btpos.mcmods.devutil.multiplatform.services.IPlatformRegistryFactory
 import btpos.mcmods.devutil.multiplatform.services.ServiceUtil
 import net.minecraft.core.Registry
 import net.minecraft.resources.ResourceKey
@@ -43,7 +43,7 @@ interface DeferredRegistrar<REG>: Iterable<REG> {
 	 */
 	override fun iterator(): Iterator<REG>
 	
-	companion object : PlatformRegistryFactory by ServiceUtil.findFirst<PlatformRegistryFactory>()
+	companion object : IPlatformRegistryFactory by ServiceUtil.findFirst<IPlatformRegistryFactory>()
 }
 
 /**

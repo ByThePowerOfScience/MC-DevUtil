@@ -9,9 +9,9 @@ import net.minecraft.resources.ResourceKey
  *
  * Has a different implementation on each modloader.
  */
-interface PlatformRegistryFactory {
+interface IPlatformRegistryFactory {
 	/**
-	 * Creates a DeferredRegistrar tailored to the current modloader.
+	 * Creates a [DeferredRegistrar] tailored to the current modloader.
 	 *
 	 * NOTE: If you're on NeoForge, you *must call* [btpos.mcmods.devutil.neoforge.multiplatform.services.NeoForgeRegistryFactory.registerModEventBus]
 	 *
