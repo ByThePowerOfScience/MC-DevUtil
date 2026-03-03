@@ -1,10 +1,15 @@
+@file:Suppress("UnstableApiUsage")
+
+import btpos.gradle.mcmods.multiplatform.base.attributes.MCPlatform
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.utils.extendsFrom
 
 
 plugins {
 	id("java-library")
 	id("maven-publish")
 	id("kotlin-configure")
+	id("btpos.gradle.mcmods.multiplatform.base")
 }
 
 
@@ -70,11 +75,15 @@ repositories {
 // Declare capabilities on the outgoing configurations.
 // Read more about capabilities here: https://docs.gradle.org/current/userguide/component_capabilities.html#sec:declaring-additional-capabilities-for-a-local-component
 listOf("apiElements", "sourcesElements", "javadocElements").forEach { variant ->
-	configurations.findByName("$variant")?.outgoing {
-		capability("$group:${project.name}:$version")
+	configurations.findByName(variant)?.outgoing {
+		capability("$group:$mod_id-${project.name}:$version")
 		capability("$group:${base.archivesName.get()}:$version")
 		capability("$group:$mod_id-${project.name}-${minecraft_version}:$version")
 		capability("$group:$mod_id:$version")
+		
+		attributes {
+			attributeProvider(MCPlatform.TARGET_PLATFORM, btposMultiplatform.platform.map { objects.named<MCPlatform>(it) })
+		}
 	} ?: return@forEach
 	publishing.publications.configureEach {
 		if (this is MavenPublication)
@@ -84,10 +93,13 @@ listOf("apiElements", "sourcesElements", "javadocElements").forEach { variant ->
 
 configurations.named { it.startsWith("runtimeElements") }.configureEach {
 	outgoing {
-		capability("$group:${project.name}:$version")
+		capability("$group:$mod_id-${project.name}:$version")
 		capability("$group:${base.archivesName.get()}:$version")
 		capability("$group:$mod_id-${project.name}-${minecraft_version}:$version")
 		capability("$group:$mod_id:$version")
+		attributes {
+			attributeProvider(MCPlatform.TARGET_PLATFORM, btposMultiplatform.platform.map { objects.named<MCPlatform>(it) })
+		}
 	}
 	val cfgname = this@configureEach.name
 	publishing.publications.configureEach {

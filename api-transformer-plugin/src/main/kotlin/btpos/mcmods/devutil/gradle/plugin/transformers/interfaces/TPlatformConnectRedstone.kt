@@ -1,6 +1,6 @@
 package btpos.mcmods.devutil.gradle.plugin.transformers.interfaces
 
-import btpos.gradle.architecturyextended.base.transformerutils.ChainableClassVisitor
+import btpos.gradle.mcmods.multiplatform.base.transformerutils.ChainableClassVisitor
 import btpos.mcmods.devutil.gradle.plugin.transformers.ITransformerProvider
 
 object TPlatformConnectRedstone : ITransformerProvider {

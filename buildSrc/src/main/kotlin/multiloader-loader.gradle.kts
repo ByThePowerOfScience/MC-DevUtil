@@ -1,8 +1,7 @@
-import btpos.gradle.architecturyextended.base.tasks.ClassTransformTask
 
 plugins {
     id("multiloader-common")
-    id("btpos.gradle.multiloader.platformtransformers")
+    id("btpos.gradle.mcmods.multiplatform.postprocessing")
     idea
 }
 

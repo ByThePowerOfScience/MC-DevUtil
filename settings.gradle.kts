@@ -1,3 +1,5 @@
+import org.gradle.internal.serialize.codecs.stdlib.propertiesCodec
+
 pluginManagement {
     repositories {
         gradlePluginPortal()

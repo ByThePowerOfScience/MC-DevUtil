@@ -8,3 +8,10 @@ plugins {
 repositories {
     mavenCentral()
 }
+
+tasks.register("publishAllToMavenLocal") {
+    group = "custom"
+    dependsOn(listOf(":fabric", ":neoforge", ":common").map {
+        project(it).tasks["publishToMavenLocal"]
+    } + gradle.includedBuild("api-transformer-plugin").task(":publishToMavenLocal"))
+}

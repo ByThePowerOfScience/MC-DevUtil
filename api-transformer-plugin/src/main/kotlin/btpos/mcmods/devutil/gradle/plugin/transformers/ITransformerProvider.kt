@@ -1,6 +1,6 @@
 package btpos.mcmods.devutil.gradle.plugin.transformers
 
-import btpos.gradle.architecturyextended.base.transformerutils.ChainableClassVisitor
+import btpos.gradle.mcmods.multiplatform.base.transformerutils.ChainableClassVisitor
 
 
 /**

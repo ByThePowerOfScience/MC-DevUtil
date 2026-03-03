@@ -1,3 +1,5 @@
+import btpos.gradle.mcmods.multiplatform.base.attributes.MCPlatform
+
 plugins {
     id("multiloader-loader")
     id("net.neoforged.moddev")
@@ -9,6 +11,10 @@ fun Project.prop(name: String): String {
 
 tasks.test {
     useJUnitPlatform()
+}
+
+btposMultiplatform {
+    platform = MCPlatform.NEOFORGE
 }
 
 neoForge {

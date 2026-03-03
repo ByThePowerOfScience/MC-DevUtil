@@ -1,3 +1,5 @@
+import btpos.gradle.mcmods.multiplatform.base.attributes.MCPlatform
+
 plugins {
     id("multiloader-common")
     id("net.neoforged.moddev")
@@ -5,6 +7,10 @@ plugins {
 
 fun Project.prop(name: String): String {
     return rootProject.property(name) as String
+}
+
+btposMultiplatform {
+    platform = MCPlatform.AGNOSTIC
 }
 
 neoForge {

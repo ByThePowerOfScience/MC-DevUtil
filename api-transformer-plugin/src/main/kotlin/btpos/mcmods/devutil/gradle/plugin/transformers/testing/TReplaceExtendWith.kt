@@ -1,6 +1,6 @@
 package btpos.mcmods.devutil.gradle.plugin.transformers.testing
 
-import btpos.gradle.architecturyextended.base.transformerutils.ChainableClassVisitor
+import btpos.gradle.mcmods.multiplatform.base.transformerutils.ChainableClassVisitor
 import btpos.mcmods.devutil.gradle.plugin.transformers.ITransformerProvider
 import org.objectweb.asm.AnnotationVisitor
 import org.objectweb.asm.Type

@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "btpos.mcmods.devutil.gradle"
-version = "1.0-SNAPSHOT"
+version = properties["version"] as String
 
 repositories {
 	mavenLocal()
@@ -30,7 +30,7 @@ kotlin {
 }
 
 dependencies {
-	api("btpos.gradle.multiloader.platformtransformers:btpos.gradle.multiloader.platformtransformers.gradle.plugin:1.0-SNAPSHOT")
+	api("btpos.gradle.mcmods.multiplatform.postprocessing:btpos.gradle.mcmods.multiplatform.postprocessing.gradle.plugin:1.0-SNAPSHOT")
 }
 
 gradlePlugin {

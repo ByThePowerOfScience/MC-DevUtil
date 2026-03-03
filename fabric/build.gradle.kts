@@ -1,5 +1,9 @@
 @file:Suppress("UnstableApiUsage")
 
+import btpos.gradle.mcmods.multiplatform.base.attributes.MCPlatform
+import org.gradle.kotlin.dsl.named
+
+
 plugins {
     id("fabric-loom")
     id("multiloader-loader")
@@ -7,6 +11,10 @@ plugins {
 
 fun Project.prop(name: String): String {
     return rootProject.property(name) as String
+}
+
+btposMultiplatform {
+    platform = MCPlatform.FABRIC
 }
 
 dependencies {
