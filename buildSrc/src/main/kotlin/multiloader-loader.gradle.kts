@@ -17,7 +17,7 @@ configurations {
 val mod_id: String by rootProject.properties
 
 dependencies {
-    implementation(project(":common")) {
+    compileOnly(project(":common")) {
         capabilities {
             requireCapability("$group:$mod_id")
         }
