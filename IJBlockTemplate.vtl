@@ -1,0 +1,91 @@
+#if (${PACKAGE_NAME} && ${PACKAGE_NAME} != "")package ${PACKAGE_NAME}
+
+#end
+import btpos.mcmods.devutil.common.structure.blocks.BlockWithEntity
+import btpos.mcmods.devutil.common.structure.composition.IOnChange
+import btpos.mcmods.devutil.common.util.serialization.ICodecSerializableMutable
+import btpos.mcmods.devutil.common.util.serialization.putCodecSerializable
+import btpos.mcmods.devutil.common.util.serialization.readCodecSerializableToExisting
+import com.mojang.serialization.Codec
+import com.mojang.serialization.codecs.RecordCodecBuilder
+import net.minecraft.core.BlockPos
+import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.block.entity.BlockEntity
+import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.level.block.state.StateDefinition
+import net.minecraft.world.level.storage.ValueInput
+import net.minecraft.world.level.storage.ValueOutput
+
+#set( $snakecaseName = $NAME.replaceAll("([a-z])([A-Z]+)", "${DS}1_${DS}2").toLowerCase() )
+#set( $snakecaseNameCaps = $snakecaseName.toUpperCase() )
+val ${snakecaseNameCaps} by block(Block${NAME}.ID, withItem=TODO(), supplier=::Block${NAME})
+val ${snakecaseNameCaps}_ENTITY by ent(::${snakecaseNameCaps}, ::Tile${NAME})
+
+#[[$END$]]#
+class Block${NAME}(props: Properties) : Block(props), BlockWithEntity<Tile${NAME}> {
+    companion object {
+        const val ID = "${snakecaseName}"
+    }
+
+    override fun getEntityType() = ${snakecaseNameCaps}_ENTITY
+
+    override fun createBlockStateDefinition(builder: StateDefinition.Builder<Block, BlockState>) {
+        super.createBlockStateDefinition(builder)
+        TODO("Add block state properties")
+    }
+}
+
+class Tile${NAME} @JvmOverloads constructor(pos: BlockPos, blockState: BlockState, private val state: TileState${NAME} = TileState${NAME}())
+    : BlockEntity(${snakecaseNameCaps}_ENTITY, pos, blockState), ITile${NAME} by state
+{
+    init {
+        state.onChange = ::setChanged
+    }
+
+    //region Saving
+    override fun saveAdditional(output: ValueOutput) {
+        super.saveAdditional(output)
+        output.putCodecSerializable("state", state)
+    }
+
+    override fun loadAdditional(input: ValueInput) {
+        super.loadAdditional(input)
+        input.readCodecSerializableToExisting("state", state)
+    }
+    //endregion
+}
+
+
+interface ITile${NAME} {
+
+}
+#set( $hasCustomChangeListener = $HAS_CUSTOM_CHANGE_LISTENER && $HAS_CUSTOM_CHANGE_LISTENER != "" )
+
+class TileState${NAME}(
+    #if($hasCustomChangeListener)pO#{else}override var o#{end}nChange: () -> Unit = {}
+) : ITile${NAME}, ICodecSerializableMutable<TileState${NAME}>, IOnChange {
+    companion object {
+        @JvmStatic val CODEC: Codec<TileState${NAME}> = RecordCodecBuilder.create {
+            it.group(
+
+            ).apply(it) {
+                TileState${NAME}()
+            }
+        }
+    }
+    //region ICodecSerializableMutable
+    override fun codec() = CODEC
+    override fun copyFrom(other: TileState${NAME}) {}
+    //endregion
+    #if($hasCustomChangeListener)
+    //region IOnChange
+    override var onChange: () -> Unit = pOnChange
+        set(value) {
+            field = value
+        }
+    init {
+        onChange = pOnChange
+    }
+    //endregion
+    #end
+}
