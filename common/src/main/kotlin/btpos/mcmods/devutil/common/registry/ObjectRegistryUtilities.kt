@@ -80,7 +80,7 @@ interface ItemRegistryUtilities : ObjectRegistryUtilities {
 	 * @param propsFactory Creates a new properties instance. 1.21+ requires the ID as part of the properties, meaning we have to make new Properties instances each time.
 	 * @param itemFactory Creates the item from the properties.
 	 */
-	fun <T : Item> item(bprop: KProperty0<*>, propsFactory: () -> Item.Properties, itemFactory: (Item.Properties) -> T): RegistrySupplier<T> {
+	fun <T : Item> item(bprop: KProperty0<*>, propsFactory: () -> Item.Properties = Item::Properties, itemFactory: (Item.Properties) -> T): RegistrySupplier<T> {
 		val name = getId(bprop).path
 		return item(name, propsFactory, itemFactory)
 	}
@@ -113,7 +113,7 @@ interface BlockRegistryUtilities : ItemRegistryUtilities {
 	 * @param itemProps The BlockItem's properties. Only matters if [withItem] is set.
 	 * @param supplier The factory to create the block instance. Accepts the properties supplied by [propertiesFactory].
 	 */
-	fun <T : Block> block(id: String, propertiesFactory: () -> BlockBehaviour.Properties, withItem: Boolean = false, itemProps: () -> Item.Properties = Item::Properties, supplier: (BlockBehaviour.Properties) -> T): RegistrySupplier<T> {
+	fun <T : Block> block(id: String, propertiesFactory: () -> BlockBehaviour.Properties = BlockBehaviour.Properties::of, withItem: Boolean = false, itemProps: () -> Item.Properties = Item::Properties, supplier: (BlockBehaviour.Properties) -> T): RegistrySupplier<T> {
 		val propsInst = propertiesFactory().setId(BLOCKS.getKeyForPath(id))
 		
 		return BLOCKS.register(id) { supplier(propsInst) }.also { bDelegate ->
