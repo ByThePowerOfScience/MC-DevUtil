@@ -37,9 +37,9 @@ neoForge {
         create("client") {
             client()
         }
-        create("data") {
-            clientData()
-        }
+//        create("data") {
+//            clientData()
+//        }
         create("server") {
             server()
         }

@@ -27,37 +27,6 @@ interface ICodecSerializable<SELF : ICodecSerializable<SELF>>//, INbtSerializabl
     private fun self(): SELF = this as SELF
     
     fun codec(): Codec<SELF>
-    
-//    override fun populateFromNbt(tag: CompoundTag) {
-//        codec().decode(NbtOps.INSTANCE, tag).ifSuccess { (made, _) ->
-//            copyFrom(made)
-//        }.ifError { res ->
-//            // a partial result is like in a list where a few elements got decoded and then one of them didn't decode properly
-////			TODO("Handle partial result")
-//            res.map { (partial, _) ->
-//                copyFrom(partial)
-//            }
-//        }
-//    }
-//
-//    override fun writeAsNbt(tag: CompoundTag) {
-//        val newtag = codec()
-//            .encode(self(), NbtOps.INSTANCE, null)
-//            .getOrThrow(false) {
-//                LOGGER.error(
-//                    "Error when writing {} to NBT: \"{}\"",
-//                    this@ICodecSerializable.javaClass.name,
-//                    it
-//                )
-//            }
-//        if (newtag !is CompoundTag) {
-//            LOGGER.error("Error when writing {} to NBT: object serialized to non-Compound Tag.", this.javaClass.simpleName)
-//        } else {
-//            newtag.allKeys.forEach {
-//                tag[it] = newtag[it]!!
-//            }
-//        }
-//    }
 }
 
 interface ICodecSerializableMutable<SELF>

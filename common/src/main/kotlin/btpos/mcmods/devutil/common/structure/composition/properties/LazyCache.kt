@@ -8,14 +8,14 @@ import kotlin.reflect.KProperty
  *
  * Allows for caching a value dependent on another, changing, field: like with [btpos.mcmods.dungeondesigner.builder.blocks.actors.TriggerVarItemConverter.cachedInclusiveAABB] caching the AABB derived from [btpos.mcmods.dungeondesigner.builder.blocks.actors.TriggerVarItemConverter.value].
  */
-class LazyCache<T>(val getter: () -> T) : ReadOnlyProperty<Any?, T> {
+class LazyCache<T>(val getter: () -> T) {
 	@JvmField
 	var cache: T? = null
 	
 	@JvmField
 	var isInitialized = false
 	
-	override fun getValue(thisRef: Any?, property: KProperty<*>): T {
+	operator fun getValue(thisRef: Any?, property: KProperty<*>): T {
 		if (!isInitialized) {
 			cache = getter()
 			isInitialized = true
