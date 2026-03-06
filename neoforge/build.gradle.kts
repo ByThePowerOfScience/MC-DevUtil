@@ -68,7 +68,7 @@ repositories {
 }
 
 dependencies {
-    implementation("thedarkcolour:kotlinforforge-neoforge:5.9.0")
+    implementation("thedarkcolour:kotlinforforge-neoforge:5.10.0")
 	testImplementation("net.neoforged:testframework:${prop("neoforge_version")}")
     testImplementation(libs.bundles.junit)
     testRuntimeOnly(libs.junit.launcher)

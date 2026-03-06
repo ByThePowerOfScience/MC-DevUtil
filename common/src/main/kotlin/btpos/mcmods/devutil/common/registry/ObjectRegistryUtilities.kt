@@ -42,13 +42,11 @@ interface ObjectRegistryUtilities {
 	 * @throws IllegalStateException If the property is not delegated to a [RegistrySupplier]
 	 */
 	fun getId(prop: KProperty0<*>): ResourceLocation {
-		prop.isAccessible = true
-		
 		return prop.safeGetDelegate<RegistrySupplier<*>>()?.id
 		       ?: throw IllegalStateException("Property $prop must be a RegistrySupplier to get its ID.")
 	}
 	
-	fun DeferredRegistrar<*>.modLoc(path: String) = ResourceLocation.fromNamespaceAndPath(modId, path)
+	fun DeferredRegistrar<*>.modLoc(path: String): ResourceLocation = ResourceLocation.fromNamespaceAndPath(modId, path)
 	
 	fun <T> DeferredRegistrar<T>.getKeyForPath(path: String): ResourceKey<T> {
 		return ResourceKey.create(registryKey, this.modLoc(path))

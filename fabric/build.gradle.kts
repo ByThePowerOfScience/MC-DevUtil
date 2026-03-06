@@ -25,7 +25,7 @@ dependencies {
     })
     modImplementation ("net.fabricmc:fabric-loader:${rootProject.prop("fabric_loader_version")}")
     modImplementation ("net.fabricmc.fabric-api:fabric-api:${rootProject.prop("fabric_version")}")
-    modImplementation("net.fabricmc:fabric-language-kotlin:1.13.3+kotlin.2.1.21")
+    modImplementation("net.fabricmc:fabric-language-kotlin:1.13.7+kotlin.2.2.21")
     testImplementation("net.fabricmc:fabric-loader-junit:${rootProject.prop("fabric_loader_version")}")
     testImplementation(libs.bundles.junit)
     testRuntimeOnly(libs.junit.launcher)

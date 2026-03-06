@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     id("groovy-gradle-plugin")
     `kotlin-dsl`
+    kotlin("jvm") version libs.versions.kotlin
 }
 
 repositories {
