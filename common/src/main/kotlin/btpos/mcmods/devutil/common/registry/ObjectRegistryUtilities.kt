@@ -19,8 +19,8 @@ import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockBehaviour
 import net.minecraft.world.level.block.state.BlockState
+import java.util.function.BiFunction
 import kotlin.reflect.KProperty0
-import kotlin.reflect.jvm.isAccessible
 
 
 /**
@@ -118,6 +118,16 @@ interface BlockRegistryUtilities : ItemRegistryUtilities {
 			if (withItem)
 				item(id, itemProps) { BlockItem(bDelegate.get(), it) }
 		}
+	}
+	
+	/**
+	 * A public constructor for [BlockEntityType][net.minecraft.world.level.block.entity.BlockEntityType] using accessible classes.
+	 *
+	 * @param entityFactory Creates an instance of your BlockEntity from the position it's being made for and the blockstate of the block asking for it.
+	 * @param allowedBlocks What blocks are allowed to have this BlockEntity.  I believe this is checked at runtime, but I could be wrong.
+	 */
+	fun <T : BlockEntity> BlockEntityType(entityFactory: BiFunction<BlockPos, BlockState, T>, allowedBlocks: Set<Block>): BlockEntityType<T> {
+		return net.minecraft.world.level.block.entity.BlockEntityType(entityFactory::apply, allowedBlocks)
 	}
 	
 	/**
