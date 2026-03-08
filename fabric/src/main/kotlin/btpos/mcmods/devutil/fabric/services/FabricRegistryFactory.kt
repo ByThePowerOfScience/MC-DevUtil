@@ -19,16 +19,7 @@ class FabricRegistryFactory : IPlatformRegistryFactory {
 }
 
 private class FabricDeferredRegistrar<T : Any>(override val modId: String, override val registryKey: ResourceKey<Registry<T>>) : DeferredRegistrar<T> {
-	@Suppress("NOTHING_TO_INLINE")
-	inline fun <T> Registry<T>.gett(key: ResourceKey<T>): Optional<Holder.Reference<T>> {
-		return this.get(key)
-	}
-	
-	@Suppress("UNCHECKED_CAST")
-	val registry = BuiltInRegistries.REGISTRY.let { it: Registry<*> ->
-		// type checker just refuses to even resolve the method unless I do this
-		(it as Registry<Registry<Any>>).gett(registryKey as ResourceKey<Registry<Any>>)
-	}.orElseThrow() as Registry<T>
+	private val registry: Registry<T> = (BuiltInRegistries.REGISTRY as Registry<Registry<Any>>).get(registryKey as ResourceKey<Registry<Any>>).orElseThrow().value() as Registry<T>
 	
 	/**
 	 * Set of registry objects that are waiting to be registered in the [registerSelf] invocation.
