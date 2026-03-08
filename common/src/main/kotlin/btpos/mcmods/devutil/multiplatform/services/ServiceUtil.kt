@@ -16,7 +16,7 @@ object ServiceUtil {
 	 *
 	 * @param packageFilter Regex pattern for the specific package the expected class will be in, to prevent injection by other mods.
 	 */
-	inline fun <reified T : Any> findFirst(@Language("REGEXP") packageFilter: String): T {
+	inline fun <reified T : Any> findFirst(@Language("RegExp") packageFilter: String): T {
 		val pattern = Regex.fromLiteral(packageFilter)
 		return ServiceLoader.load(T::class.java).firstOrNull { it: T -> it.javaClass.`package`.name.matches(pattern) }
 		       ?: throw IllegalStateException("No platform-specific implementation found for service \"${T::class.java.name}\" with package filter \"${packageFilter}\".")
