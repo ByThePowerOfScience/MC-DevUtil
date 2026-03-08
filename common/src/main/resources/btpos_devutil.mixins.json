@@ -3,7 +3,7 @@
   "minVersion": "0.8",
   "package": "btpos.mcmods.devutil.mixin",
   "compatibilityLevel": "JAVA_17",
-  "plugin": "btpos.mcmods.devutil.MixinConfigPlugin",
+  "plugin": "btpos.mcmods.devutil.DevUtilMixinConfigPlugin",
   "mixins": [
   ],
   "client": [
