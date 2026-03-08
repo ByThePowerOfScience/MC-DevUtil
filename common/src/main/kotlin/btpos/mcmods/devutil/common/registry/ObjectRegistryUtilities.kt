@@ -30,7 +30,7 @@ import kotlin.reflect.KProperty0
  * @see DataComponentRegistryUtilities
  */
 interface ObjectRegistryUtilities {
-	fun <T> createRegistry(id: String, key: ResourceKey<Registry<T>>): DeferredRegistrar<T> {
+	fun <T : Any> createRegistry(id: String, key: ResourceKey<Registry<T>>): DeferredRegistrar<T> {
 		return DeferredRegistrar.create(id, key)
 	}
 	
