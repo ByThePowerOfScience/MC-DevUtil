@@ -5,6 +5,7 @@ import btpos.mcmods.devutil.common.registry.RegistrySupplier
 import btpos.mcmods.devutil.multiplatform.services.IPlatformRegistryFactory
 import net.minecraft.core.Registry
 import net.minecraft.resources.ResourceKey
+import net.minecraft.resources.ResourceLocation
 import net.neoforged.bus.api.IEventBus
 import net.neoforged.neoforge.registries.DeferredHolder
 import net.neoforged.neoforge.registries.DeferredRegister
@@ -50,7 +51,10 @@ private class NeoForgeDeferredRegister<T>(private val reg: DeferredRegister<T>) 
 	private inner class ForgeRegistrySupplier<ITEM : T>(private val internal: DeferredHolder<*, ITEM>) : RegistrySupplier<ITEM> {
 		override val modId: String by this@NeoForgeDeferredRegister::modId
 		override val registry by reg::registryKey
-		override val registeredName by internal::registeredName
+		override val registeredName by internal.id::path
+		
+		override val id: ResourceLocation
+			get() = internal.id
 		
 		override fun get() = internal.get()
 	}
