@@ -29,6 +29,12 @@ dependencies {
 //    "commonSources"(project.project(":common").sourceSets.main.get().allSource)
 }
 
+tasks.compileJava {
+    configurations["commonSources"]?.takeIf { !it.isEmpty } ?.let {
+        source(it)
+    }
+}
+
 kotlin {
     sourceSets {
         val common = project(":common")
