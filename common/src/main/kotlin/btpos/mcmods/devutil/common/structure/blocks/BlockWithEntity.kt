@@ -44,7 +44,7 @@ interface BlockWithEntity<ENT_TYPE : BlockEntity> : EntityBlock {
 	 *
 	 * @return The new ticker, or `null` if no ticker is needed for this block. (default behavior)
 	 */
-	fun getTicker_typed(pLevel: Level, pState: BlockState, pBlockEntityType: BlockEntityType<ENT_TYPE>): ((level: Level?, pos: BlockPos?, state: BlockState, ent: ENT_TYPE) -> Unit)? = null
+	fun getTicker_typed(pLevel: Level, pState: BlockState, pBlockEntityType: BlockEntityType<ENT_TYPE>): ((level: Level, pos: BlockPos, state: BlockState, ent: ENT_TYPE) -> Unit)? = null
 	
 	/**
 	 * Create an object that listens to game events in a certain radius around its position.
