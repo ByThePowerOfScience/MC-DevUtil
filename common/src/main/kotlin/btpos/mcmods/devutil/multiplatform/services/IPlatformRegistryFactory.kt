@@ -18,5 +18,5 @@ interface IPlatformRegistryFactory {
 	 * @param modId The ID for your mod.
 	 * @param registryKey The key (from [BuiltInRegistries][net.minecraft.core.registries.BuiltInRegistries]) for the registry you want to register objects to.
 	 */
-	fun <T> create(modId: String, registryKey: ResourceKey<Registry<T>>): DeferredRegistrar<T>
+	fun <T : Any> create(modId: String, registryKey: ResourceKey<Registry<T>>): DeferredRegistrar<T>
 }

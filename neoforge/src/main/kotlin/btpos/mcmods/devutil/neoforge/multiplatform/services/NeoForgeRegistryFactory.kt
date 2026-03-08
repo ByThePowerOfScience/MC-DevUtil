@@ -21,7 +21,7 @@ class NeoForgeRegistryFactory : IPlatformRegistryFactory {
 		}
 	}
 	
-	override fun <T> create(modId: String, registryKey: ResourceKey<Registry<T>>): DeferredRegistrar<T> {
+	override fun <T : Any> create(modId: String, registryKey: ResourceKey<Registry<T>>): DeferredRegistrar<T> {
 		return NeoForgeDeferredRegister(DeferredRegister.create<T>(registryKey, modId))
 	}
 }

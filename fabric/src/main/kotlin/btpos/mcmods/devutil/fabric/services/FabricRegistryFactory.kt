@@ -12,13 +12,14 @@ import java.util.Optional
 import java.util.function.Supplier
 
 class FabricRegistryFactory : IPlatformRegistryFactory {
-	override fun <T> create(modId: String, registryKey: ResourceKey<Registry<T>>): DeferredRegistrar<T> {
+	override fun <T : Any> create(modId: String, registryKey: ResourceKey<Registry<T>>): DeferredRegistrar<T> {
 		@Suppress("UNCHECKED_CAST") // the typechecker is freaking out with this one fsr...
 		return FabricDeferredRegistrar(modId, registryKey as ResourceKey<Registry<Any>>) as FabricDeferredRegistrar<T>
 	}
 }
 
 private class FabricDeferredRegistrar<T : Any>(override val modId: String, override val registryKey: ResourceKey<Registry<T>>) : DeferredRegistrar<T> {
+	@Suppress("UNCHECKED_CAST")
 	private val registry: Registry<T> = (BuiltInRegistries.REGISTRY as Registry<Registry<Any>>).get(registryKey as ResourceKey<Registry<Any>>).orElseThrow().value() as Registry<T>
 	
 	/**
