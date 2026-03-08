@@ -131,6 +131,14 @@ interface BlockRegistryUtilities : ItemRegistryUtilities {
 	}
 	
 	/**
+	 * A public constructor for [BlockEntityType][net.minecraft.world.level.block.entity.BlockEntityType] using accessible classes.
+	 *
+	 * @param entityFactory Creates an instance of your BlockEntity from the position it's being made for and the blockstate of the block asking for it.
+	 * @param allowedBlocks What blocks are allowed to have this BlockEntity.  I believe this is checked at runtime, but I could be wrong.
+	 */
+	fun <T : BlockEntity> BlockEntityType(entityFactory: BiFunction<BlockPos, BlockState, T>, vararg allowedBlocks: Block) = BlockEntityType(entityFactory=entityFactory, allowedBlocks.toSet())
+	
+	/**
 	 * Register a block entity type by the given name.
 	 */
 	fun <T : BlockEntity> ent(name: String, supplier: () -> BlockEntityType<T>): RegistrySupplier<BlockEntityType<T>> {
