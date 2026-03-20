@@ -41,3 +41,11 @@ gradlePlugin {
 		}
 	}
 }
+
+publishing {
+	publications {
+		configureEach {
+			(this as MavenPublication).artifactId = "transformer"
+		}
+	}
+}
