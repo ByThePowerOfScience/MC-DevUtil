@@ -126,8 +126,8 @@ interface BlockRegistryUtilities : ItemRegistryUtilities {
 	 * @param entityFactory Creates an instance of your BlockEntity from the position it's being made for and the blockstate of the block asking for it.
 	 * @param allowedBlocks What blocks are allowed to have this BlockEntity.  I believe this is checked at runtime, but I could be wrong.
 	 */
-	fun <T : BlockEntity> BlockEntityType(entityFactory: BiFunction<BlockPos, BlockState, T>, allowedBlocks: Set<Block>): BlockEntityType<T> {
-		return net.minecraft.world.level.block.entity.BlockEntityType(entityFactory::apply, allowedBlocks)
+	fun <T : BlockEntity> newBlockEntityType(entityFactory: BiFunction<BlockPos, BlockState, T>, allowedBlocks: Set<Block>): BlockEntityType<T> {
+		return BlockEntityType(entityFactory::apply, allowedBlocks)
 	}
 	
 	/**
@@ -136,7 +136,7 @@ interface BlockRegistryUtilities : ItemRegistryUtilities {
 	 * @param entityFactory Creates an instance of your BlockEntity from the position it's being made for and the blockstate of the block asking for it.
 	 * @param allowedBlocks What blocks are allowed to have this BlockEntity.  I believe this is checked at runtime, but I could be wrong.
 	 */
-	fun <T : BlockEntity> BlockEntityType(entityFactory: BiFunction<BlockPos, BlockState, T>, vararg allowedBlocks: Block) = BlockEntityType(entityFactory=entityFactory, allowedBlocks.toSet())
+	fun <T : BlockEntity> newBlockEntityType(entityFactory: BiFunction<BlockPos, BlockState, T>, vararg allowedBlocks: Block) = newBlockEntityType(entityFactory=entityFactory, allowedBlocks.toSet())
 	
 	/**
 	 * Register a block entity type by the given name.
