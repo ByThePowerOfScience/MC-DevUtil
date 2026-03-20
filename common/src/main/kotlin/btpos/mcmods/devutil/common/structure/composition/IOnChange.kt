@@ -5,24 +5,21 @@ import kotlin.reflect.KProperty
 
 /**
  * Standardized interface for objects that invoke a callback whenever they change.
- *
- * Implementers should make sure that [onChange]'s setter also sets onChange for any members that also implement this class.
  */
 interface IOnChange {
     /**
-     * Callback to be invoked whenever this object's state is changed. (Usually to updated the NBT serialization).
+     * Callback to be invoked whenever this object's state is changed. (Usually to update the NBT serialization)
      *
-     * Implementers need to make sure the setter also sets onChange for any members that also implement this class.
+     * Implementers need to make sure the setter for this property _also_ sets the [onChange] callback for any of the class's members that need it.
      */
-    var onChange: () -> Unit
-    
+    var onChange: Runnable
     
     /**
      * Property delegate that calls [onChange] when the value has been set.
      */
     fun <T> notify(initialValue: T): ReadWriteProperty<Any?, T> {
         return object : ReadWriteProperty<Any?, T> {
-            var value: T = initialValue
+            private var value: T = initialValue
             
             override fun getValue(thisRef: Any?, property: KProperty<*>) = value
             
@@ -31,7 +28,7 @@ interface IOnChange {
                     return;
                 
                 this.value = value
-                onChange()
+                onChange.run()
             }
         }
     }
