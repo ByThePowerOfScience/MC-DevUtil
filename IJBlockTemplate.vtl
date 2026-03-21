@@ -6,6 +6,7 @@ import btpos.mcmods.devutil.common.structure.composition.IOnChange
 import btpos.mcmods.devutil.common.util.serialization.ICodecSerializableMutable
 import btpos.mcmods.devutil.common.util.serialization.putCodecSerializable
 import btpos.mcmods.devutil.common.util.serialization.readCodecSerializableToExisting
+import btpos.plugins.kt.varinterfacedelegation.VariableDelegate
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.core.BlockPos
@@ -35,7 +36,8 @@ class Block${NAME}(props: Properties) : Block(props), BlockWithEntity<Tile${NAME
     }
 }
 
-class Tile${NAME} @JvmOverloads constructor(pos: BlockPos, blockState: BlockState, private val state: TileState${NAME} = TileState${NAME}())
+@Suppress("DelegationToVarProperty")
+class Tile${NAME} @JvmOverloads constructor(pos: BlockPos, blockState: BlockState, @VariableDelegate private var state: TileState${NAME} = TileState${NAME}())
     : BlockEntity(${snakecaseNameCaps}_ENTITY, pos, blockState), ITile${NAME} by state
 {
     init {
@@ -50,7 +52,9 @@ class Tile${NAME} @JvmOverloads constructor(pos: BlockPos, blockState: BlockStat
 
     override fun loadAdditional(input: ValueInput) {
         super.loadAdditional(input)
-        input.readCodecSerializableToExisting("state", state)
+        state = input.readCodecSerializable("state", state.codec()).also {
+            it.onChange = ::setChanged
+        }
     }
     //endregion
 }
@@ -59,11 +63,8 @@ class Tile${NAME} @JvmOverloads constructor(pos: BlockPos, blockState: BlockStat
 interface ITile${NAME} {
 
 }
-#set( $hasCustomChangeListener = $HAS_CUSTOM_CHANGE_LISTENER && $HAS_CUSTOM_CHANGE_LISTENER != "" )
 
-class TileState${NAME}(
-    #if($hasCustomChangeListener)pO#{else}override var o#{end}nChange: () -> Unit = {}
-) : ITile${NAME}, ICodecSerializableMutable<TileState${NAME}>, IOnChange {
+class TileState${NAME} : ITile${NAME}, ICodecSerializableMutable<TileState${NAME}>, IOnChange {
     companion object {
         @JvmStatic val CODEC: Codec<TileState${NAME}> = RecordCodecBuilder.create {
             it.group(
@@ -73,19 +74,6 @@ class TileState${NAME}(
             }
         }
     }
-    //region ICodecSerializableMutable
     override fun codec() = CODEC
-    override fun copyFrom(other: TileState${NAME}) {}
-    //endregion
-    #if($hasCustomChangeListener)
-    //region IOnChange
-    override var onChange: () -> Unit = pOnChange
-        set(value) {
-            field = value
-        }
-    init {
-        onChange = pOnChange
-    }
-    //endregion
-    #end
+    override var onChange: Runnable = {}
 }

@@ -12,7 +12,7 @@ interface IOnChange {
      *
      * Implementers need to make sure the setter for this property _also_ sets the [onChange] callback for any of the class's members that need it.
      */
-    var onChange: Runnable
+    var onChange: () -> Unit
     
     /**
      * Property delegate that calls [onChange] when the value has been set.
@@ -28,7 +28,7 @@ interface IOnChange {
                     return;
                 
                 this.value = value
-                onChange.run()
+                onChange()
             }
         }
     }
