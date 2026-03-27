@@ -79,7 +79,6 @@ listOf("apiElements", "sourcesElements", "javadocElements").forEach { variant ->
 		capability("$group:$mod_id-${project.name}:$version")
 		capability("$group:${base.archivesName.get()}:$version")
 		capability("$group:$mod_id-${project.name}-${minecraft_version}:$version")
-		capability("$group:$mod_id:$version")
 		
 		attributes {
 			attributeProvider(MCPlatform.TARGET_PLATFORM, btposMultiplatform.platform.map { objects.named<MCPlatform>(it) })
@@ -96,7 +95,6 @@ configurations.named { it.startsWith("runtimeElements") }.configureEach {
 		capability("$group:$mod_id-${project.name}:$version")
 		capability("$group:${base.archivesName.get()}:$version")
 		capability("$group:$mod_id-${project.name}-${minecraft_version}:$version")
-		capability("$group:$mod_id:$version")
 		attributes {
 			attributeProvider(MCPlatform.TARGET_PLATFORM, btposMultiplatform.platform.map { objects.named<MCPlatform>(it) })
 		}

@@ -1,3 +1,4 @@
+import btpos.gradle.mcmods.multiplatform.base.attributes.MCPlatform
 
 plugins {
     id("multiloader-common")
@@ -17,12 +18,6 @@ configurations {
 val mod_id: String by rootProject.properties
 
 dependencies {
-    compileOnly(project(":common")) {
-        capabilities {
-            requireCapability("$group:$mod_id")
-        }
-    }
-    
     compileOnly("com.google.auto.service:auto-service-annotations:1.1.1")
     annotationProcessor("com.google.auto.service:auto-service:1.1.1")
     

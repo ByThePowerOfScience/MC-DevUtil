@@ -11,7 +11,7 @@ repositories {
 
 tasks.register("publishAllToMavenLocal") {
     group = "custom"
-    dependsOn(listOf(":fabric", ":neoforge", ":common").map {
+    dependsOn(listOf(":fabric", ":neoforge", ":common", ":test-utils").map {
         project(it).tasks["publishToMavenLocal"]
     })
     dependsOn(gradle.includedBuild("api-transformer-plugin").task(":publishToMavenLocal"))

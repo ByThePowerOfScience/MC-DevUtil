@@ -1,5 +1,4 @@
 import btpos.gradle.mcmods.multiplatform.base.attributes.MCPlatform
-import org.jetbrains.kotlin.gradle.utils.extendsFrom
 
 plugins {
     id("multiloader-common")
