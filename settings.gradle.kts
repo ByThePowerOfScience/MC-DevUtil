@@ -50,4 +50,5 @@ rootProject.name = "DevUtilML"
 include("common")
 include("fabric")
 include("neoforge")
+include("test-utils")
 includeBuild("api-transformer-plugin")
