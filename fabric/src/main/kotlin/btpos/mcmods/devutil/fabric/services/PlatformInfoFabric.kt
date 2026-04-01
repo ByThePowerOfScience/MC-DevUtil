@@ -1,7 +1,6 @@
 package btpos.mcmods.devutil.fabric.services
 
 import btpos.mcmods.devutil.multiplatform.services.IPlatformInfoService
-import com.google.auto.service.AutoService
 import net.fabricmc.loader.api.FabricLoader
 
 class PlatformInfoFabric : IPlatformInfoService {

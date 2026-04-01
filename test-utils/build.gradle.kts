@@ -5,24 +5,17 @@ plugins {
     id("net.neoforged.moddev")
 }
 
-fun Project.prop(name: String): String {
-    return rootProject.property(name) as String
-}
 
 btposMultiplatform {
     platform = MCPlatform.AGNOSTIC
 }
 
 neoForge {
-    version = prop("neoforge_version")
-    // Automatically enable AccessTransformers if the file exists
-    val at = file("src/main/resources/META-INF/accesstransformer.cfg")
-    if (at.exists()) {
-        accessTransformers.from(at.absolutePath)
-    }
+    version = neoforge_version // has to be neoforge to allow unit testing
+    
     parchment {
-        minecraftVersion = project.prop("parchment_minecraft")
-        mappingsVersion = project.prop("parchment_version")
+        minecraftVersion = parchment_minecraft
+        mappingsVersion = parchment_version
     }
     
     mods {

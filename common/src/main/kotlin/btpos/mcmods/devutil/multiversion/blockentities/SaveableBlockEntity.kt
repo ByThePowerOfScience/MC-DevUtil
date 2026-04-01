@@ -50,7 +50,7 @@ fun <T : ICodecSerializable<T>> SaveOutput.putCodecSerializable(key: String, ser
     putCodecSerializable(key, serializable, serializable.codec())
 }
 
-class SaveOutput_ValueOutput(private val output: ValueOutput) : SaveOutput {
+@JvmInline value class SaveOutput_ValueOutput(private val output: ValueOutput) : SaveOutput {
     override fun <T : Any> putCodecSerializable(key: String, serializable: T, codec: Codec<T>) {
         output.store(key, codec, serializable)
     }

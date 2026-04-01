@@ -1,7 +1,4 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 plugins {
-    id("groovy-gradle-plugin")
     `kotlin-dsl`
     kotlin("jvm") version libs.versions.kotlin
 }
@@ -12,22 +9,18 @@ repositories {
     gradlePluginPortal()
 }
 
+fun pluginDep(id: String, version: String): String {
+    return "$id:$id.gradle.plugin:$version"
+}
+
 dependencies {
-    implementation("org.jetbrains.kotlin.jvm:org.jetbrains.kotlin.jvm.gradle.plugin:${libs.versions.kotlin.get()}")
-    implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
-    // val libs = the<LibrariesForLibs>()
     implementation(libs.kotlin.reflect.get())
-    implementation("btpos.gradle.mcmods.multiplatform.base:btpos.gradle.mcmods.multiplatform.base.gradle.plugin:1.0-SNAPSHOT")
-    implementation("btpos.gradle.mcmods.multiplatform.postprocessing:btpos.gradle.mcmods.multiplatform.postprocessing.gradle.plugin:1.0-SNAPSHOT")
-}
-
-java {
-    targetCompatibility = JavaVersion.VERSION_21
-    sourceCompatibility = JavaVersion.VERSION_21
-}
-
-kotlin {
-    compilerOptions {
-        jvmTarget.set(JvmTarget.JVM_21)
-    }
+    
+    implementation(pluginDep("org.jetbrains.kotlin.jvm", libs.versions.kotlin.get()))
+    
+    implementation(pluginDep("btpos.gradle.mcmods.multiplatform.base", "1.0-SNAPSHOT"))
+    implementation(pluginDep("btpos.gradle.mcmods.multiplatform.postprocessing", "1.0-SNAPSHOT"))
+    implementation(pluginDep("btpos.plugins.kt.varinterfacedelegation", "0.1.0-SNAPSHOT"))
+    
+    implementation(pluginDep("com.github.gmazzo.buildconfig", "6.0.9"))
 }

@@ -10,22 +10,8 @@ plugins {
 	id("maven-publish")
 	id("kotlin-configure")
 	id("btpos.gradle.mcmods.multiplatform.base")
+	idea
 }
-
-
-val mod_id: String by properties
-val mod_name: String by properties
-val mod_author: String by properties
-val minecraft_version: String by properties
-val minecraft_version_range: String by properties
-val neoforge_version: String by properties
-val neoforge_loader_version_range: String by properties
-val fabric_version: String by properties
-val fabric_loader_version: String by properties
-val license: String by properties
-val description: String by properties
-val credits: String by properties
-val java_version: String by properties
 
 base {
 	archivesName = "${mod_id}-${project.name}-${minecraft_version}"
@@ -51,17 +37,36 @@ repositories {
 	}
 	exclusiveContent {
 		forRepositories(
-				maven {
-					name = "ParchmentMC"
-					url = uri("https://maven.parchmentmc.org/")
-				},
-				maven {
-					name = "NeoForge"
-					url = uri("https://maven.neoforged.net/releases")
-				}
+			maven {
+				name = "ParchmentMC"
+				url = uri("https://maven.parchmentmc.org/")
+			},
+			maven {
+				name = "NeoForge"
+				url = uri("https://maven.neoforged.net/releases")
+			}
 		)
+		filter { includeGroup("org.parchmentmc.data") }
+	}
+	mavenLocal()
+	exclusiveContent {
+		forRepository {
+			maven {
+				url = uri("https://maven.teamresourceful.com/repository/maven-public/")
+				name = "Common Storage Lib"
+			}
+		}
 		filter {
-			includeGroup("org.parchmentmc.data")
+//			includeGroupAndSubgroups("earth.terrarium.common_storage_lib")
+			includeGroupAndSubgroups("com.terraformersmc")
+		}
+	}
+	exclusiveContent {
+		forRepository {
+			maven(url="https://maven.bawnorton.com/releases")
+		}
+		filter {
+			includeGroup("com.github.bawnorton.mixinsquared")
 		}
 	}
 	maven {
@@ -74,8 +79,11 @@ repositories {
 
 // Declare capabilities on the outgoing configurations.
 // Read more about capabilities here: https://docs.gradle.org/current/userguide/component_capabilities.html#sec:declaring-additional-capabilities-for-a-local-component
-listOf("apiElements", "sourcesElements", "javadocElements").forEach { variant ->
-	configurations.findByName(variant)?.outgoing {
+configurations.named { when (it) {
+	"apiElements", "sourcesElements", "javadocElements" -> true
+	else -> it.startsWith("runtimeElements")
+} }.configureEach {
+	outgoing {
 		capability("$group:$mod_id-${project.name}:$version")
 		capability("$group:${base.archivesName.get()}:$version")
 		capability("$group:$mod_id-${project.name}-${minecraft_version}:$version")
@@ -83,26 +91,11 @@ listOf("apiElements", "sourcesElements", "javadocElements").forEach { variant ->
 		attributes {
 			attributeProvider(MCPlatform.TARGET_PLATFORM, btposMultiplatform.platform.map { objects.named<MCPlatform>(it) })
 		}
-	} ?: return@forEach
+	}
+	val cfg = this@configureEach
 	publishing.publications.configureEach {
 		if (this is MavenPublication)
-			suppressPomMetadataWarningsFor(variant)
-	}
-}
-
-configurations.named { it.startsWith("runtimeElements") }.configureEach {
-	outgoing {
-		capability("$group:$mod_id-${project.name}:$version")
-		capability("$group:${base.archivesName.get()}:$version")
-		capability("$group:$mod_id-${project.name}-${minecraft_version}:$version")
-		attributes {
-			attributeProvider(MCPlatform.TARGET_PLATFORM, btposMultiplatform.platform.map { objects.named<MCPlatform>(it) })
-		}
-	}
-	val cfgname = this@configureEach.name
-	publishing.publications.configureEach {
-		if (this is MavenPublication)
-			suppressPomMetadataWarningsFor(cfgname)
+			suppressPomMetadataWarningsFor(cfg.name)
 	}
 }
 
@@ -119,36 +112,37 @@ tasks.jar {
 	
 	manifest {
 		attributes(
-				mapOf(
-						"Specification-Title" to mod_name,
-						"Specification-Vendor" to mod_author,
-						"Specification-Version" to project.tasks.jar.get().archiveVersion,
-						"Implementation-Title" to project.name,
-						"Implementation-Version" to project.tasks.jar.get().archiveVersion,
-						"Implementation-Vendor" to mod_author,
-						"Built-On-Minecraft" to minecraft_version
-				)
+			mapOf(
+				"Specification-Title" to mod_name,
+				"Specification-Vendor" to mod_author,
+				"Specification-Version" to project.tasks.jar.get().archiveVersion,
+				"Implementation-Title" to project.name,
+				"Implementation-Version" to project.tasks.jar.get().archiveVersion,
+				"Implementation-Vendor" to mod_author,
+				"Built-On-Minecraft" to minecraft_version
+			)
 		)
 	}
 }
 
 tasks.processResources {
 	val expandProps = mapOf<String, String>(
-			"version" to version.toString(),
-			"group" to project.group.toString(), //Else we target the task"s group.
-			"minecraft_version" to minecraft_version,
-			"minecraft_version_range" to minecraft_version_range,
-			"fabric_version" to fabric_version,
-			"fabric_loader_version" to fabric_loader_version,
-			"mod_name" to mod_name,
-			"mod_author" to mod_author,
-			"mod_id" to mod_id,
-			"license" to license,
-			"description" to description,
-			"neoforge_version" to neoforge_version,
-			"neoforge_loader_version_range" to neoforge_loader_version_range,
-			"credits" to credits,
-			"java_version" to java_version
+		"version" to version.toString(),
+		"group" to project.group.toString(), //Else we target the task"s group.
+		"minecraft_version" to minecraft_version,
+		"minecraft_version_range" to minecraft_version_range,
+		"fabric_version" to fabric_version,
+		"fabric_loader_version" to fabric_loader_version,
+		"mod_name" to mod_name,
+		"mod_author" to mod_author,
+		"mod_id" to mod_id,
+		"license" to license,
+		"description" to description,
+		"neoforge_version" to neoforge_version,
+		"neoforge_loader_version_range" to neoforge_loader_version_range,
+		"credits" to credits,
+		"java_version" to java_version,
+//		"devutil_version" to devutil_version
 	)
 	
 	val jsonExpandProps = expandProps.mapValues { entry ->

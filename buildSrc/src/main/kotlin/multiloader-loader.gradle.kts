@@ -1,8 +1,7 @@
-import btpos.gradle.mcmods.multiplatform.base.attributes.MCPlatform
-
 plugins {
     id("multiloader-common")
     id("btpos.gradle.mcmods.multiplatform.postprocessing")
+    id("ismodjar-convention")
     idea
 }
 
@@ -15,39 +14,28 @@ configurations {
     }
 }
 
+val commonProject = project(":common")
+
+
 val mod_id: String by rootProject.properties
 
 dependencies {
-    compileOnly("com.google.auto.service:auto-service-annotations:1.1.1")
-    annotationProcessor("com.google.auto.service:auto-service:1.1.1")
-    
-//    "commonSources"(project.project(":common").sourceSets.main.get().allSource)
+    "commonSources"(commonProject.java.sourceSets.main.get().allSource)
 }
 
 tasks.compileJava {
-    configurations["commonSources"]?.takeIf { !it.isEmpty } ?.let {
-        source(it)
-    }
+    source(configurations["commonSources"])
 }
+
+sourceSets.main.get().resources.srcDir(commonProject.sourceSets.main.get().resources.srcDirs)
 
 kotlin {
     sourceSets {
-        val common = project(":common")
         main {
-            // TODO figure out how to get this to depend on the java sources too for mixins
-            dependsOn(common.kotlin.sourceSets.main.get())
-            resources.srcDir(common.sourceSets.main.get().resources)
+            dependsOn(commonProject.kotlin.sourceSets.main.get())
         }
         test {
-            dependsOn(common.kotlin.sourceSets.test.get())
-            resources.srcDir(common.sourceSets.test.get().resources)
+            dependsOn(commonProject.kotlin.sourceSets.test.get())
         }
     }
 }
-
-//idea {
-//    module {
-//        // Fix IntelliJ not seeing that we can access the common sources despite not declaring a dependency on it
-//        scopes["COMPILE"]!!["plus"]!!.add(configurations["commonSources"])
-//    }
-//}

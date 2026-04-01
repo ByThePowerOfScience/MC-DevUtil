@@ -1,7 +1,8 @@
 [versions]
     kotlin = "2.2.21"
+    fabric-kotlin = "1.13.7+kotlin.2.2.21"
+    
     junit = "5.7.1"
-
     mockito = "5.23.0"
 
 [libraries]
@@ -9,10 +10,12 @@
     junit-jupiter = { module="org.junit.jupiter:junit-jupiter", version.ref="junit" }
     junit-launcher = { module="org.junit.platform:junit-platform-launcher" }
     hamcrest = { module="org.hamcrest:hamcrest", version = "3.0" }
-
+    
     mockito-core = { module="org.mockito:mockito-core", version.ref="mockito" }
     mockito-kotlin = { module="org.mockito.kotlin:mockito-kotlin", version="5.4.0" }
     mockito-junit = { module="org.mockito:mockito-junit-jupiter", version.ref="mockito" }
+    
+    fabric-kotlin = { module="net.fabricmc:fabric-language-kotlin", version.ref="fabric-kotlin" }
 
 [bundles]
     junit = ["junit-jupiter", "junit-launcher"]
